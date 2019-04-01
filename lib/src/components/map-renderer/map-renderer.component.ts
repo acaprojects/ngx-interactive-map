@@ -17,15 +17,24 @@ export interface IMapPoint {
     styleUrls: [`./map-renderer.styles.scss`]
 })
 export class MapRendererComponent extends BaseWidgetComponent implements OnInit, OnChanges {
+    /** Zoom level of the map */
     @Input() public scale = 1;
+    /** Point within the map to center in the view */
     @Input() public center: IMapPoint = { x: .5, y: .5 };
+    /** URL of the Map SVG to render */
     @Input() public src = '';
+    /** CSS styles to apply to the map */
     @Input() public css = '';
+    /** Re-renders the map on changes to this */
     @Input() public redraw: any = null;
+    /** List of points of interest */
     @Input() public items: IMapPointOfInterest[];
+    /** Change emitter for SVG DOM element */
     @Output() public map = new EventEmitter();
 
+    /** Block to render SVG element */
     @ViewChild('renderBlock') public render_block: ElementRef;
+    /** Canvas to render static images of map when zooming */
     @ViewChild('canvas') private canvas: ElementRef;
     @ViewChild('content') private content: ElementRef;
     @ViewChild('container') private container: ElementRef;

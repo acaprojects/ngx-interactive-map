@@ -12,13 +12,16 @@ export interface IMapPointOfInterest<T = any> {
     coordinates?: IMapPoint;
     /** Content to render at position */
     content: MapOverlayContent;
+    /** Content render method. Determined automatically */
     method?: string;
+    /** Data to inject into the content template/component */
     data?: T;
+    /** Zoom level used when focusing on the POI */
     zoom?: number;
-    exists?: boolean;
+    /** Inject for passing data into components */
     injector?: Injector;
+    /** Map render location. Determined based on coordinates or element grabbed using id */
     center?: IMapPoint;
-    service?: any;
 }
 
 /** Valid content types Template, Component or HTML string */
