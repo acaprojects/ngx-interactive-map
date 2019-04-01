@@ -1,13 +1,10 @@
 
-import { IMapPoint } from "./map-renderer/map-renderer.component";
+import { IMapPoint } from './map-renderer/map-renderer.component';
 
-/*
- *  Utility functions for maps
- */
-
+/**  Utility functions for maps */
 export class MapUtilities {
     constructor() {
-        throw new Error('class is static')
+        throw new Error('class is static');
     }
 
     public static base64Encode(str) {
@@ -25,9 +22,9 @@ export class MapUtilities {
     }
 
     public static cleanCssSelector(name) {
-        let selector = name.replace(/[!"#$%&'()*+,.\/;<=>?@[\\\]^`{|}~]/g, "\\$&");
-        let parts = selector.split(' ');
-        for (let p of parts) {
+        let selector = name.replace(/[!"#$%&'()*+,.\/;<=>?@[\\\]^`{|}~]/g, '\\$&');
+        const parts = selector.split(' ');
+        for (const p of parts) {
             parts.splice(parts.indexOf(p), 1, [p.replace(/^\\/g, '')]);
         }
         selector = parts.join(' ');
@@ -45,18 +42,24 @@ export class MapUtilities {
                 y: +(((el_box.top - box.top) / box.height + (el_box.height / 2) / box.height) * 100).toFixed(3)
             };
         } else if (coords) {
-            const ratio = box.width / box.height
+            const ratio = box.width / box.height;
             // console.log(`Coords: ${JSON.stringify(coords)}, ${ratio}`);
             position = {
                 x: +((coords.x / 10000) * 100).toFixed(3),
                 y: +((coords.y / (10000 * ratio)) * 100).toFixed(3)
-            }
+            };
         }
         if (position) {
-            if (position.x < 0) { position.x = 0 }
-            else if (position.x > 100) { position.x = 100 }
-            if (position.y < 0) { position.y = 0 }
-            else if (position.y > 100) { position.y = 100 }
+            if (position.x < 0) {
+                position.x = 0;
+            } else if (position.x > 100) {
+                position.x = 100;
+            }
+            if (position.y < 0) {
+                position.y = 0;
+            } else if (position.y > 100) {
+                position.y = 100;
+            }
         }
         return position;
     }
