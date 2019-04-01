@@ -1,0 +1,10 @@
+
+<div class="map-range" widget [@show] [style.height]="context.data.map_state?.dim + 'px'" [style.width]="context.data.map_state?.dim + 'px'">
+    <div class="range" [style.height]="(size * 100) + '%'" [style.width]="(size * 100) + '%'"
+        [style.background-color]="context.data.bg_alpha || 'rgba(3, 169, 244, .54)'"
+        [style.border-color]="context.data.bg || '#03A9F4'">
+    </div>
+    <div class="details" [style.bottom]="(size * 110 / 2 + 200) + '%'">
+        {{ context.data.text }}
+    </div>
+</div>
