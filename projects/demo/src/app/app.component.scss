@@ -96,9 +96,11 @@ body {
 
 }
 
-.map {
+.test > .map {
     width: 24em;
     height: 24em;
+    margin-top: .5em;
+    border: 1px solid #f0f0f0;
 }
 
 button {

@@ -58,27 +58,27 @@ export class MapOverlayOutletComponent extends BaseWidgetComponent implements On
         if (changes.items || changes.map) {
             this.timeout('update', () => this.processItems(), changes.map && !changes.map.previousValue ? 1000 : 200);
         }
-        if (changes.scale) {
-            this.processItems();
-        }
     }
 
     public processItems() {
         if (!this.items) { return; }
         if (this.items.length <= 0) { this.list = []; return; }
         this.timeout('process', () => {
-            this.list = [];
-            const view_box = this.map.getAttribute('viewBox').split(' ');
-            const map_box = this.map.getBoundingClientRect();
-            const box = this.container.getBoundingClientRect();
-            const x_scale = Math.max(1, (map_box.width / map_box.height) / (+view_box[2] / +view_box[3]));
-            const y_scale = Math.max(1, (map_box.height / map_box.width) / (+view_box[3] / +view_box[2]));
-            for (const poi of this.items) {
-                this.setMethod(poi);
-                this.calculatePosition(poi, { x_scale, y_scale, view: view_box, map: map_box, cntr: box });
-            }
-            this.list = [ ...this.items ];
+            this.list = [...this.items];
+            this.updateItems();
         });
+    }
+
+    public updateItems() {
+        const view_box = this.map.getAttribute('viewBox').split(' ');
+        const map_box = this.map.getBoundingClientRect();
+        const box = this.container.getBoundingClientRect();
+        const x_scale = Math.max(1, (map_box.width / map_box.height) / (+view_box[2] / +view_box[3]));
+        const y_scale = Math.max(1, (map_box.height / map_box.width) / (+view_box[3] / +view_box[2]));
+        for (const poi of this.list) {
+            this.setMethod(poi);
+            this.calculatePosition(poi, { x_scale, y_scale, view: view_box, map: map_box, cntr: box });
+        }
     }
 
     /**
@@ -118,5 +118,9 @@ export class MapOverlayOutletComponent extends BaseWidgetComponent implements On
 
     public isIE() {
         return navigator.appName == 'Microsoft Internet Explorer' || !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || !!navigator.userAgent.match(/MSIE/g);
+    }
+
+    public trackByFn(item: IMapPointOfInterest, index: number) {
+        return item ? item.id || `${item.coordinates.x},${item.coordinates.y}` : index;
     }
 }
