@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { AMapComponent } from '../map/map.component';
 import { IReadonlyMapPoint, MapOverlayContent, IMapFeature } from '../map.interfaces';
 
-@Injectable()
 export class AMapFeature<T = any> {
     /** Map Element selector */
     readonly id: string;
@@ -23,6 +22,9 @@ export class AMapFeature<T = any> {
     private _position: IReadonlyMapPoint;
 
     constructor(private _map: AMapComponent, private _injector: Injector, data: IMapFeature<T>) {
+        if (!this._map || !this._injector) {
+            throw new Error('Cannot build map feature without map or injector');
+        }
         this.id = data.id;
         this.coordinates = data.coordinates;
         this._data = data.data;
