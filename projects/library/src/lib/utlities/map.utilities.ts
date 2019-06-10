@@ -1,4 +1,4 @@
-import { IMapPoint } from 'library/lib/components/map-renderer/map-renderer.component';
+import { IMapPoint } from '../components/map.interfaces';
 
 
 /**  Utility functions for maps */

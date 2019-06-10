@@ -3,7 +3,7 @@ import { Component, Input, OnChanges, Output, EventEmitter, SimpleChanges, Injec
 
 import { IMapListener } from '../../directives/map-styler.directive';
 import { BaseWidgetComponent } from '../../base.component';
-import { IMapFeature, IMapPoint } from '../map.interfaces';
+import { IMapFeature, IMapPoint, IStyleMappings } from '../map.interfaces';
 import { AMapFeature } from '../map-feature/map-feature.class';
 
 @Component({
@@ -26,7 +26,7 @@ export class AMapComponent extends BaseWidgetComponent implements OnChanges {
     /** URL to the map SVG file */
     @Input() public src: string;
     /** CSS styles to apply to the map */
-    @Input('styles') public css: { [name: string]: ({ [name: string]: (number | string) }) };
+    @Input('styles') public css: IStyleMappings;
     /** Zoom level as a percentage */
     @Input() public zoom: number;
     /** Points of interest to render on the map */
@@ -48,8 +48,12 @@ export class AMapComponent extends BaseWidgetComponent implements OnChanges {
 
     /** SVG Element for the map */
     public map: SVGElement;
-
+    /** List of processed map features */
     public render_features: AMapFeature[] = [];
+    /** Mapping of CSS styles */
+    public styles: IStyleMappings;
+    /** Processed zoom level value */
+    public scale: number;
 
     constructor(private _injector: Injector) {
         super();

@@ -32,5 +32,12 @@ export interface IReadonlyMapPoint {
     readonly y: number;
 }
 
+/** CSS selector to style mappings */
+export interface IStyleMappings {
+    [selector: string]: {
+        [property: string]: (number | string)
+    }
+}
+
 /** Valid content types Template, Component or HTML string */
 export type MapOverlayContent = TemplateRef<any> | Type<any> | string;
