@@ -1,31 +1,10 @@
 
-import { Component, Input, OnChanges, Output, EventEmitter, TemplateRef, Type, SimpleChanges, Injector } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, SimpleChanges, Injector } from '@angular/core';
 
-import { IMapPoint } from '../map-renderer/map-renderer.component';
 import { IMapListener } from '../../directives/map-styler.directive';
 import { BaseWidgetComponent } from '../../base.component';
-
-export interface IMapPointOfInterest<T = any> {
-    /** Map Element selector */
-    id?: string;
-    /** Map coordinates */
-    coordinates?: IMapPoint;
-    /** Content to render at position */
-    content: MapOverlayContent;
-    /** Content render method. Determined automatically */
-    method?: string;
-    /** Data to inject into the content template/component */
-    data?: T;
-    /** Zoom level used when focusing on the POI */
-    zoom?: number;
-    /** Inject for passing data into components */
-    injector?: Injector;
-    /** Map render location. Determined based on coordinates or element grabbed using id */
-    center?: IMapPoint;
-}
-
-/** Valid content types Template, Component or HTML string */
-export type MapOverlayContent = TemplateRef<any> | Type<any> | string;
+import { IMapFeature, IMapPoint } from '../map.interfaces';
+import { AMapFeature } from '../map-feature/map-feature.class';
 
 @Component({
     selector: 'map',
@@ -38,6 +17,7 @@ export type MapOverlayContent = TemplateRef<any> | Type<any> | string;
             min-height: 12em;
             min-width: 12em;
             overflow: hidden;
+            z-index: 1;
         }
         i { display: none }
     `]
@@ -50,9 +30,9 @@ export class AMapComponent extends BaseWidgetComponent implements OnChanges {
     /** Zoom level as a percentage */
     @Input() public zoom: number;
     /** Points of interest to render on the map */
-    @Input() public poi: IMapPointOfInterest[];
+    @Input() public features: IMapFeature[];
     /** Point on map to center on */
-    @Input() public focus: IMapPointOfInterest;
+    @Input() public focus: IMapFeature;
     /** Event listeners for elements on the map */
     @Input() public listeners: IMapListener[];
     /** Center point of the map */
@@ -66,47 +46,38 @@ export class AMapComponent extends BaseWidgetComponent implements OnChanges {
     /** Emitter for listened events */
     @Output() public event = new EventEmitter();
 
-    public model: { [name: string]: any } = {};
+    /** SVG Element for the map */
+    public map: SVGElement;
+
+    public render_features: AMapFeature[] = [];
+
+    constructor(private _injector: Injector) {
+        super();
+    }
 
     public ngOnChanges(changes: SimpleChanges) {
         super.ngOnChanges(changes);
-        const data: { [name: string]: any } = {};
-        if (changes.css) { data.styles = this.css; }
-        if (changes.zoom) { data.scale = (this.zoom || 100) / 100; }
-        if (changes.center) { data.center = this.center; }
-        if (changes.src) { data.src = this.src; }
-        if (changes.listeners) { data.listeners = this.listeners; }
-        if (changes.focus) { data.focus = this.focus; }
-        if (changes.lock) { data.lock = this.lock; }
-        if (changes.poi) {
-            if (this.focus && this.focus.content) {
-                data.interest_points = [data.focus || this.model.focus, ...this.poi];
-            } else {
-                data.interest_points = this.poi;
-            }
+        if (changes.features) {
+            this.updateFeatures();
         }
-        this.update(data);
     }
 
-    public update(data: { [name: string]: any }) {
-        // this.timeout('changes', () => {
-            for (const key in data) {
-                if (data.hasOwnProperty(key)) {
-                    this.model[key] = data[key];
-                }
-            }
-        // }, 10);
+    /**
+     * Update the center position of the map and emit the change
+     * @param center New center position
+     */
+    public postCenter(center: IMapPoint): void {
+        this.center = center;
+        this.centerChange.emit(center);
     }
 
-    public post() {
-        if (this.model.scale !== this.zoom / 100) {
-            this.zoom = +((this.model.scale || 1) * 100).toFixed(2);
-            this.zoomChange.emit(this.zoom);
-        }
-        if (this.model.center !== this.center) {
-            this.center = this.model.center;
-            this.centerChange.emit(this.center);
-        }
+    /**
+     * Update the zoom level of the map and emit the change
+     * @param zoom New zoom level
+     */
+    public postZoom(zoom: number): void {
+        this.zoom = zoom;
+        this.zoomChange.emit(zoom);
     }
 
     public handleEvent(e) {
@@ -114,7 +85,23 @@ export class AMapComponent extends BaseWidgetComponent implements OnChanges {
     }
 
     public updateMap(el: SVGElement) {
-        this.timeout('map', () => this.model.map = el, 10);
+        this.timeout('map', () => this.map = el, 10);
+    }
+
+    private updateFeatures() {
+        const features = this.focus && this.focus.content ? [this.focus, ...this.features] : this.features;
+        this.render_features = (features || []).reduce((a, v) => {
+            const feature = this.render_features.find(
+                i => i.id === v.id && i.content === v.content
+            );
+            if (feature) {
+                feature.data = v.data;
+                a.push(feature);
+            } else {
+                a.push(new AMapFeature(this, this._injector, v));
+            }
+            return a;
+        }, []);
     }
 
 }

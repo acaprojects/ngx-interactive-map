@@ -1,9 +1,8 @@
 import { Directive, Input, Output, EventEmitter, HostListener, Renderer2, SimpleChanges, ElementRef, OnChanges } from '@angular/core';
 import { BaseWidgetComponent } from '../base.component';
-import { IMapPoint } from '../components/map-renderer/map-renderer.component';
-import { IMapPointOfInterest } from '../components/map/map.component';
 import { MapService } from '../services/map.service';
 import { MapUtilities } from '../utlities/map.utilities';
+import { IMapPoint, IMapFeature } from '../components/map.interfaces';
 
 
 export interface IMapListener {
@@ -20,7 +19,7 @@ export class MapInputDirective extends BaseWidgetComponent implements OnChanges 
     @Input() public scale: number;
     @Input() public center: IMapPoint;
     @Input() public listeners: IMapListener[];
-    @Input() public focus: IMapPointOfInterest;
+    @Input() public focus: IMapFeature;
     @Input() public map: Element;
     @Input() public lock: boolean;
     @Output() public scaleChange = new EventEmitter();

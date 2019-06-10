@@ -1,8 +1,8 @@
 
 import { Component } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { AMapFeature } from '../../map-feature/map-feature.class';
 
-import { PointOfInterest } from '../../map-overlay-outlet/map-overlay-outlet.component';
 
 @Component({
     selector: 'map-pin',
@@ -20,7 +20,7 @@ import { PointOfInterest } from '../../map-overlay-outlet/map-overlay-outlet.com
 })
 export class MapPinComponent {
     /** Contextual data associated with the component */
-    public context: PointOfInterest;
+    public context: AMapFeature;
     /** Display text above the pin */
     public text: string;
     /** Primary colour of the pin */
@@ -28,9 +28,8 @@ export class MapPinComponent {
     /** Secondary colour of the pin */
     public fore: string;
 
-    constructor(context: PointOfInterest) {
+    constructor(context: AMapFeature) {
         this.context = context || {} as any;
-        if (!this.context.data) { this.context.data = {}; }
         this.text = this.context.data.text || '';
         this.back = this.context.data.back || '#FFFFFF';
         this.fore = this.context.data.fore || '#DC6900';

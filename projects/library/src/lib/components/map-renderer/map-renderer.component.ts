@@ -1,15 +1,9 @@
 import { Component, Input, ElementRef, ViewChild, Output, EventEmitter, Renderer2, SimpleChanges, OnInit, OnChanges } from '@angular/core';
 import { MapUtilities } from '../../utlities/map.utilities';
-import { IMapPointOfInterest } from '../map/map.component';
 import { MapService } from '../../services/map.service';
 import { BaseWidgetComponent } from '../../base.component';
-
-export interface IMapPoint {
-    /** x coordinate */
-    x: number;
-    /** y coordinate */
-    y: number;
-}
+import { IMapPoint } from '../map.interfaces';
+import { AMapFeature } from '../map-feature/map-feature.class';
 
 @Component({
     selector: 'aca-map-renderer',
@@ -28,7 +22,7 @@ export class MapRendererComponent extends BaseWidgetComponent implements OnInit,
     /** Re-renders the map on changes to this */
     @Input() public redraw: any = null;
     /** List of points of interest */
-    @Input() public items: IMapPointOfInterest[];
+    @Input() public items: AMapFeature[];
     /** Change emitter for SVG DOM element */
     @Output() public map = new EventEmitter();
 

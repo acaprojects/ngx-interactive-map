@@ -20,7 +20,7 @@ export class AppComponent {
         this.model.show = {};
         this.model.map = {};
         this.model.map.src = 'assets/australia.svg';
-        this.model.count = Array(20).fill(0);
+        this.model.count = Array(3).fill(0);
     }
 
     public togglePin() {

@@ -14,14 +14,9 @@ import {
 
 import { BaseWidgetComponent } from '../../base.component';
 
-import { IMapPointOfInterest } from '../map/map.component';
 import { MapUtilities } from '../../utlities/map.utilities';
+import { AMapFeature } from '../map-feature/map-feature.class';
 
-@Injectable()
-export class PointOfInterest {
-    data: { [name: string]: any };
-    constructor(poi: IMapPointOfInterest) { this.data = poi.data || {}; }
-}
 
 @Component({
     selector: 'map-overlay-outlet',
@@ -30,7 +25,7 @@ export class PointOfInterest {
 })
 export class MapOverlayOutletComponent extends BaseWidgetComponent implements OnInit, OnChanges {
     /** List of points of interest */
-    @Input() items: IMapPointOfInterest[];
+    @Input() items: AMapFeature[];
     /** Map elment render to the DOM */
     @Input() map: SVGElement;
     /** Map root element */
@@ -40,7 +35,7 @@ export class MapOverlayOutletComponent extends BaseWidgetComponent implements On
     /** Event emitter for Point of interest events */
     @Output() event = new EventEmitter();
 
-    protected list: IMapPointOfInterest[] = [];
+    protected list: AMapFeature[] = [];
 
     constructor(private injector: Injector, protected renderer: Renderer2) {
         super();
@@ -75,27 +70,8 @@ export class MapOverlayOutletComponent extends BaseWidgetComponent implements On
         const box = this.container.getBoundingClientRect();
         const x_scale = Math.max(1, (map_box.width / map_box.height) / (+view_box[2] / +view_box[3]));
         const y_scale = Math.max(1, (map_box.height / map_box.width) / (+view_box[3] / +view_box[2]));
-        for (const poi of this.list) {
-            this.setMethod(poi);
-            this.calculatePosition(poi, { x_scale, y_scale, view: view_box, map: map_box, cntr: box });
-        }
-    }
-
-    /**
-     * Set content render method for point of interest
-     * @param item POI item
-     */
-    public setMethod(item: IMapPointOfInterest) {
-        item.method = 'component';
-
-        if (typeof item.content === 'string') {
-            item.method = 'text';
-        } else if (item.content instanceof TemplateRef) {
-            item.method = 'template';
-        } else {
-            item.injector = Injector.create([
-                { provide: PointOfInterest, useValue: new PointOfInterest(item) }
-            ], this.injector);
+        for (const feature of this.list) {
+            this.calculatePosition(feature, { x_scale, y_scale, view: view_box, map: map_box, cntr: box });
         }
     }
 
@@ -103,16 +79,17 @@ export class MapOverlayOutletComponent extends BaseWidgetComponent implements On
      * Calculate render position of the given point of interest
      * @param item POI Item
      */
-    public calculatePosition(item: IMapPointOfInterest, details: { [name: string]: any }) {
+    public calculatePosition(item: AMapFeature, details: { [name: string]: any }) {
         const el = item.id ? this.map.querySelector(MapUtilities.cleanCssSelector(`#${item.id}`)) : null;
         if (el || item.coordinates) {
             const pos_box = this.isIE() && item.coordinates ? { width: +details.view[2], height: +details.view[3] } : details.cntr;
-            item.center = MapUtilities.getPosition(pos_box, el, item.coordinates) || { x: .5, y: .5 };
+            const position = MapUtilities.getPosition(pos_box, el, item.coordinates) || { x: .5, y: .5 };
             if (this.isIE() && item.coordinates) {
                 // Normalise dimensions
-                item.center.x = item.center.x / details.x_scale + (details.x_scale - 1) / 2;
-                item.center.y = item.center.y / details.y_scale + (details.y_scale - 1) / 2;
+                position.x = position.x / details.x_scale + (details.x_scale - 1) / 2;
+                position.y = position.y / details.y_scale + (details.y_scale - 1) / 2;
             }
+            item.position = position;
         }
     }
 
@@ -120,7 +97,7 @@ export class MapOverlayOutletComponent extends BaseWidgetComponent implements On
         return navigator.appName == 'Microsoft Internet Explorer' || !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || !!navigator.userAgent.match(/MSIE/g);
     }
 
-    public trackByFn(item: IMapPointOfInterest, index: number) {
-        return item ? item.id || `${item.coordinates.x},${item.coordinates.y}` : index;
+    public trackByFn(index: number, item: AMapFeature) {
+        return item ? item.id || `${item.position.x},${item.position.y}` : index;
     }
 }

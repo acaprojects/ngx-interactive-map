@@ -12,5 +12,7 @@
         [style.background-color]="background"
         [style.border-color]="border"
     ></div>
-    <div class="details" [style.bottom]="(diameter * 110) / 2 + 200 + '%'">{{ text }}</div>
+    <div class="details" [style.bottom]="'calc(' + ((diameter * 102) / 2 ) + '% + .5em)' | safe:'style'">
+        {{ text }}
+    </div>
 </div>
