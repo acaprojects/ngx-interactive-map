@@ -7,7 +7,7 @@ import { IMapFeature, IMapPoint, IStyleMappings } from '../map.interfaces';
 import { AMapFeature } from '../map-feature/map-feature.class';
 
 @Component({
-    selector: 'map',
+    selector: 'a-map',
     templateUrl: './map.template.html',
     styles: [`
         .container {

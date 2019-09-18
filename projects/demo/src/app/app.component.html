@@ -1,14 +1,14 @@
 <div class="app">
     <div class="test" *ngIf="model.map">
         <div class="map" *ngFor="let k of model.count">
-            <map
+            <a-map
                 [(zoom)]="model.zoom"
                 [src]="model.map.src"
                 [listeners]="model.map.listeners"
                 [styles]="model.map.styles"
                 [features]="model.map.poi"
                 [focus]="model.map.focus"
-            ></map>
+            ></a-map>
         </div>
         <button (click)="toggleMap()">Toggle Map</button>
         <button (click)="togglePin()">{{ model.show.pin ? 'Remove pin' : 'Add pin' }}</button>
