@@ -12,7 +12,7 @@ import {
     Injectable
 } from '@angular/core';
 
-import { BaseWidgetComponent } from '../../base.component';
+import { BaseWidgetDirective } from '../../base.directive';
 
 import { MapUtilities } from '../../utlities/map.utilities';
 import { AMapFeature } from '../map-feature/map-feature.class';
@@ -23,7 +23,7 @@ import { AMapFeature } from '../map-feature/map-feature.class';
     templateUrl: './map-overlay-outlet.component.html',
     styleUrls: ['./map-overlay-outlet.component.scss']
 })
-export class MapOverlayOutletComponent extends BaseWidgetComponent implements OnInit, OnChanges {
+export class MapOverlayOutletComponent extends BaseWidgetDirective implements OnInit, OnChanges {
     /** List of points of interest */
     @Input() items: AMapFeature[];
     /** Map elment render to the DOM */

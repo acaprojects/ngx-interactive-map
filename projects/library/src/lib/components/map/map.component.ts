@@ -2,7 +2,7 @@
 import { Component, Input, OnChanges, Output, EventEmitter, SimpleChanges, Injector } from '@angular/core';
 
 import { IMapListener } from '../../directives/map-styler.directive';
-import { BaseWidgetComponent } from '../../base.component';
+import { BaseWidgetDirective } from '../../base.directive';
 import { IMapFeature, IMapPoint, IStyleMappings } from '../map.interfaces';
 import { AMapFeature } from '../map-feature/map-feature.class';
 
@@ -22,7 +22,7 @@ import { AMapFeature } from '../map-feature/map-feature.class';
         i { display: none }
     `]
 })
-export class AMapComponent extends BaseWidgetComponent implements OnChanges {
+export class AMapComponent extends BaseWidgetDirective implements OnChanges {
     /** URL to the map SVG file */
     @Input() public src: string;
     /** CSS styles to apply to the map */

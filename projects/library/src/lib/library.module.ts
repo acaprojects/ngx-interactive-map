@@ -17,11 +17,11 @@ import { MapStylerDirective } from './directives/map-styler.directive';
 
 import { MapPinComponent } from './components/overlays/map-pin/map-pin.component';
 import { MapRangeComponent } from './components/overlays/map-range/map-range.component';
-import { BaseWidgetComponent } from './base.component';
+import { BaseWidgetDirective } from './base.directive';
 
 @NgModule({
     declarations: [
-        BaseWidgetComponent,
+        BaseWidgetDirective,
         AMapComponent,
         MapOverlayOutletComponent,
         MapRendererComponent,

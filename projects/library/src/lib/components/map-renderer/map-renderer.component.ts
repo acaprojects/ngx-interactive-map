@@ -1,7 +1,7 @@
 import { Component, Input, ElementRef, ViewChild, Output, EventEmitter, Renderer2, SimpleChanges, OnInit, OnChanges } from '@angular/core';
 import { MapUtilities } from '../../utlities/map.utilities';
 import { MapService } from '../../services/map.service';
-import { BaseWidgetComponent } from '../../base.component';
+import { BaseWidgetDirective } from '../../base.directive';
 import { IMapPoint } from '../map.interfaces';
 import { AMapFeature } from '../map-feature/map-feature.class';
 
@@ -10,7 +10,7 @@ import { AMapFeature } from '../map-feature/map-feature.class';
     templateUrl: `./map-renderer.template.html`,
     styleUrls: [`./map-renderer.styles.scss`]
 })
-export class MapRendererComponent extends BaseWidgetComponent implements OnInit, OnChanges {
+export class MapRendererComponent extends BaseWidgetDirective implements OnInit, OnChanges {
     /** Zoom level of the map */
     @Input() public scale = 1;
     /** Point within the map to center in the view */

@@ -1,6 +1,6 @@
 import { Directive, Input, Output, EventEmitter, OnChanges, Renderer2, SimpleChanges } from '@angular/core';
 
-import { BaseWidgetComponent } from '../base.component';
+import { BaseWidgetDirective } from '../base.directive';
 import { MapUtilities } from '../utlities/map.utilities';
 
 export interface IMapListener {
@@ -11,7 +11,7 @@ export interface IMapListener {
 @Directive({
     selector: '[aca-map-styler]',
 })
-export class MapStylerDirective extends BaseWidgetComponent implements OnChanges {
+export class MapStylerDirective extends BaseWidgetDirective implements OnChanges {
     @Input() public id: string;
     @Input() public styles: {
         [name: string]: ({

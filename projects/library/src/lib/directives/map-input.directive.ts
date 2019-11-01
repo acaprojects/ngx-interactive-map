@@ -1,6 +1,6 @@
 import { Directive, Input, Output, EventEmitter, HostListener, Renderer2, SimpleChanges, ElementRef, OnChanges } from "@angular/core";
 
-import { BaseWidgetComponent } from '../base.component';
+import { BaseWidgetDirective } from '../base.directive';
 import { MapService } from '../services/map.service';
 import { MapUtilities } from '../utlities/map.utilities';
 import { IMapPoint, IMapFeature } from '../components/map.interfaces';
@@ -20,7 +20,7 @@ interface POILocation {
 @Directive({
     selector: '[aca-map-input]',
 })
-export class MapInputDirective extends BaseWidgetComponent implements OnChanges {
+export class MapInputDirective extends BaseWidgetDirective implements OnChanges {
     @Input() public scale: number;
     @Input() public center: IMapPoint;
     @Input() public listeners: IMapListener[];

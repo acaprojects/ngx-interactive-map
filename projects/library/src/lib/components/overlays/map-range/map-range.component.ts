@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 import { AMapFeature } from '../../map-feature/map-feature.class';
-import { BaseWidgetComponent } from '../../../base.component';
+import { BaseWidgetDirective } from '../../../base.directive';
 
 @Component({
     selector: 'map-range',
@@ -15,7 +15,7 @@ import { BaseWidgetComponent } from '../../../base.component';
         ])
     ]
 })
-export class MapRangeComponent extends BaseWidgetComponent {
+export class MapRangeComponent extends BaseWidgetDirective {
     /** Default diameter of the range circle */
     public diameter = 10;
     /** Contextual data associated with the component */

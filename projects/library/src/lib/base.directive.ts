@@ -1,9 +1,11 @@
 
-import { Component, OnDestroy, OnChanges, Input, ChangeDetectorRef } from '@angular/core';
+import { Directive, OnDestroy, OnChanges, Input, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-@Component({ template: '' })
-export class BaseWidgetComponent implements OnChanges, OnDestroy {
+@Directive({
+    selector: 'aca-base-interactive-maps-module-directive'
+})
+export class BaseWidgetDirective implements OnChanges, OnDestroy {
     @Input() public id = '';
     @Input() public name = '';
     @Input() public klass = 'default';
