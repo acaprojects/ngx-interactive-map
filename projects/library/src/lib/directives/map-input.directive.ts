@@ -134,8 +134,8 @@ export class MapInputDirective extends BaseWidgetDirective implements OnChanges 
         const dx = e.center.x - this.model.dx;
         const dy = e.center.y - this.model.dy;
         const center = this.model.center_start || { x: .5, y: .5 }
-        const delta_x = +(dx / this.map_box.width).toFixed(4);
-        const delta_y = +(dy / this.map_box.height).toFixed(4);
+        const delta_x = +((dx / this.map_box.width) / this.scale).toFixed(4);
+        const delta_y = +((dy / this.map_box.height) / this.scale).toFixed(4);
         this.model.center = { x: center.x - delta_x, y: center.y - delta_y };
         this.changePosition();
     }
@@ -226,14 +226,6 @@ export class MapInputDirective extends BaseWidgetDirective implements OnChanges 
             }
             this.model.scale = 1;
             this.model.center = { x: .5, y: .5 };
-            // this.renderer.setStyle(this.map, 'pointer-events', 'auto');
-            // this.renderer.listen(this.map, 'click', (e) => {
-            //     const box = this.map.getBoundingClientRect();
-            //     console.log('Clicked:', {
-            //         x: `${((e.clientX - box.left) / box.width * 100).toFixed(3)}%`,
-            //         y: `${((e.clientY - box.top) / box.height * 100).toFixed(3)}%`
-            //     });
-            // })
             if (this.focus) {
                 this.focusItem();
             } else {
