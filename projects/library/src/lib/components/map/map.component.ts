@@ -108,4 +108,13 @@ export class AMapComponent extends BaseWidgetDirective implements OnChanges {
         }, []);
     }
 
+    /**
+     * Reset the position and scale to their intial values
+     */
+    private reset() {
+        this.postZoom(100);
+        this.scale = 1;
+        this.postCenter({ x: .5, y: .5 });
+    }
+
 }
