@@ -23,5 +23,7 @@
         (map)="updateMap($event)"
         [css]="css"
         [items]="render_features"
-    ></aca-map-renderer>
+    >
+        <ng-content></ng-content>
+    </aca-map-renderer>
 </div>

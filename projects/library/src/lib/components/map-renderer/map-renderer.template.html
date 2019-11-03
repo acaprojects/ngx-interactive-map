@@ -13,6 +13,6 @@
         </div>
     </div>
     <div class="loader" [style.display]="model.loading || !model.map_data  ? '' : 'none'">
-        <!-- <spinner type="circle-ring"></spinner> -->
+        <ng-content></ng-content>
     </div>
 </div>
