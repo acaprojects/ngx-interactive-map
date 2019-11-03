@@ -62,7 +62,7 @@ export class AppComponent {
             this.model.map.focus = focus;
             this.model.map.styles = {
                 '#AU-NSW': { fill: ['#123456', '#345612', '#561234'][Math.floor(Math.random() * 3)] },
-                '#AU-WA:hover': {
+                '#AU.NT:hover': {
                     fill: ['#654321', '#436521', '#216543'][Math.floor(Math.random() * 3)],
                     transition: 'fill 200ms'
                 }
@@ -70,7 +70,7 @@ export class AppComponent {
         }
         if (this.model.show.hover) {
             this.model.map.poi.push({
-                id: 'AU-WA',
+                id: 'AU.NT',
                 coordinates: null,
                 content: MapPinComponent,
                 data: { text: 'This state is WA' }
