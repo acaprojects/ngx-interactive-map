@@ -92,6 +92,15 @@ export class AMapComponent extends BaseWidgetDirective implements OnChanges {
         this.timeout('map', () => this.map = el, 10);
     }
 
+    /**
+     * Reset the position and scale to their intial values
+     */
+    public reset() {
+        this.postZoom(100);
+        this.scale = 1;
+        this.postCenter({ x: .5, y: .5 });
+    }
+
     private updateFeatures() {
         const features = this.focus && this.focus.content ? [this.focus, ...this.features] : this.features;
         this.render_features = (features || []).reduce((a, v) => {
@@ -106,15 +115,6 @@ export class AMapComponent extends BaseWidgetDirective implements OnChanges {
             }
             return a;
         }, []);
-    }
-
-    /**
-     * Reset the position and scale to their intial values
-     */
-    private reset() {
-        this.postZoom(100);
-        this.scale = 1;
-        this.postCenter({ x: .5, y: .5 });
     }
 
 }
