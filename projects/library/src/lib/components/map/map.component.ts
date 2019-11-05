@@ -64,6 +64,9 @@ export class AMapComponent extends BaseWidgetDirective implements OnChanges {
         if (changes.features) {
             this.updateFeatures();
         }
+        if (changes.zoom) {
+            this.scale = this.zoom;
+        }
     }
 
     /**

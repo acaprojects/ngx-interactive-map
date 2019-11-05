@@ -20,6 +20,8 @@ export class AppComponent {
         this.model.show = {};
         this.model.map = {};
         this.model.map.src = 'assets/australia.svg';
+        this.model.zoom = 1;
+        this.model.center = { x: .25, y: .75 };
         this.model.count = Array(3).fill(0);
     }
 
@@ -35,6 +37,20 @@ export class AppComponent {
 
     public toggleMap() {
         this.model.map.src = this.model.map.src.indexOf('180') >= 0 ? 'assets/australia.svg' : 'assets/australia-180-rot.svg';
+    }
+
+    public zoom(value: number) {
+        if (value > 0) {
+            this.model.zoom = +(this.model.zoom * (1 + (value / 100))).toFixed(5);
+            if (this.model.zoom > 10) {
+                this.model.zoom = 10;
+            }
+        } else if (value < 0) {
+            this.model.zoom = +(this.model.zoom * (1 / (1 - (value / 100)))).toFixed(5);
+            if (this.model.zoom < 1) {
+                this.model.zoom = 1;
+    }
+        }
     }
 
     public updatePointsOfInterest() {

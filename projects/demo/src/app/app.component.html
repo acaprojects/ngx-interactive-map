@@ -1,8 +1,9 @@
 <div class="app">
     <div class="test" *ngIf="model.map">
-        <div class="map" *ngFor="let k of model.count">
+        <div class="map">
             <a-map
                 [(zoom)]="model.zoom"
+                [(center)]="model.center"
                 [src]="model.map.src"
                 [listeners]="model.map.listeners"
                 [styles]="model.map.styles"
@@ -12,6 +13,11 @@
         </div>
         <button (click)="toggleMap()">Toggle Map</button>
         <button (click)="togglePin()">{{ model.show.pin ? 'Remove pin' : 'Add pin' }}</button>
-        <button (click)="toggleRadius()">{{ model.show.radius ? 'Remove radius' : 'Add radius' }}</button>
+        <button (click)="toggleRadius()">{{ model.show.radius ? 'Remove radius' : 'Add radius' }}</button><br/>
+        {{ model.zoom * 100 }}%<br/>
+        <button (click)="zoom(10)">Zoom in</button>
+        <button (click)="zoom(-10)">Zoom Out</button><br/>
+        {{ model.center | json }}<br/>
+        <button (click)="model.center = { x: .5, y: .5 }">Reset Position</button>
     </div>
 </div>
