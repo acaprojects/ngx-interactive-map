@@ -183,7 +183,7 @@ export class MapInputDirective extends BaseWidgetDirective implements OnChanges 
                 return this.timeout('focus', () => this.focusItem());
             }
             if (!this.map_box) {
-                this.map_box = this.map.getBoundingClientRect();
+                this.map_box = this.el.nativeElement.getBoundingClientRect();
             }
             const selector = this.focus.id ? `#${MapUtilities.cleanCssSelector(this.focus.id)}` : ''
             const el = this.focus.id ? this.map.querySelector(selector) : null;
@@ -193,7 +193,7 @@ export class MapInputDirective extends BaseWidgetDirective implements OnChanges 
                     this.focus.zoom ? this.focus.zoom / 100 : this.lookup[this.src][selector].scale;
                 } else {
                     const box = el.getBoundingClientRect();
-                    const map_box = this.map.getBoundingClientRect();
+                    const map_box = this.el.nativeElement.getBoundingClientRect();
                     this.model.center = {
                         x:  ((box.left + box.width / 2) - map_box.left) / map_box.width,
                         y:  ((box.top + box.height / 2) - map_box.top) / map_box.height
@@ -220,7 +220,7 @@ export class MapInputDirective extends BaseWidgetDirective implements OnChanges 
      */
     public update() {
         if (this.map) {
-            this.map_box = this.map.getBoundingClientRect();
+            this.map_box = this.el.nativeElement.getBoundingClientRect();
             if (this.map_box.height === 0 || this.map_box.width === 0) {
                 return this.timeout('update_fail', () => this.update());
             }
