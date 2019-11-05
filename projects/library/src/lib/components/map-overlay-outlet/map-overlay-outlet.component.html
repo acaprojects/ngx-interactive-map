@@ -1,5 +1,5 @@
 <div class="map-overlay-outlet" widget *ngIf="items">
-    <div [class]="'map-poi' + (item.type ? ' ' + item.type : '')" [@show] widget *ngFor="let item of items; trackBy: trackByFn">
+    <div [class]="'map-poi' + (item.type ? ' ' + item.type : '')" widget *ngFor="let item of items; trackBy: trackByFn">
         <div
             class="item"
             *ngIf="item.position && (item.position.x || item.position.y)"
