@@ -101,6 +101,9 @@ export class AMapComponent extends BaseWidgetDirective implements OnChanges {
         this.postCenter({ x: .5, y: .5 });
     }
 
+    /**
+     * Update the list of features keeping already existing feature
+     */
     private updateFeatures() {
         const features = this.focus && this.focus.content ? [this.focus, ...this.features] : this.features;
         this.render_features = (features || []).reduce((a, v) => {
