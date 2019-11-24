@@ -65,13 +65,15 @@ export class MapOverlayOutletComponent extends BaseWidgetDirective implements On
     }
 
     public updateItems() {
-        const view_box = this.map.getAttribute('viewBox').split(' ');
-        const map_box = this.map.getBoundingClientRect();
-        const box = this.container.getBoundingClientRect();
-        const x_scale = Math.max(1, (map_box.width / map_box.height) / (+view_box[2] / +view_box[3]));
-        const y_scale = Math.max(1, (map_box.height / map_box.width) / (+view_box[3] / +view_box[2]));
-        for (const feature of this.list) {
-            this.calculatePosition(feature, { x_scale, y_scale, view: view_box, map: map_box, cntr: box });
+        if (this.map) {
+            const view_box = this.map.getAttribute('viewBox').split(' ');
+            const map_box = this.map.getBoundingClientRect();
+            const box = this.container.getBoundingClientRect();
+            const x_scale = Math.max(1, (map_box.width / map_box.height) / (+view_box[2] / +view_box[3]));
+            const y_scale = Math.max(1, (map_box.height / map_box.width) / (+view_box[3] / +view_box[2]));
+            for (const feature of this.list) {
+                this.calculatePosition(feature, { x_scale, y_scale, view: view_box, map: map_box, cntr: box });
+            }
         }
     }
 
