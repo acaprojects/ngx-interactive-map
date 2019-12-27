@@ -2,6 +2,7 @@ import { Directive, Input, Output, EventEmitter, OnChanges, Renderer2, SimpleCha
 
 import { BaseWidgetDirective } from '../base.directive';
 import { MapUtilities } from '../utlities/map.utilities';
+import { IStyleMappings } from '../components/map.interfaces';
 
 export interface IMapListener {
     id: string;
@@ -13,11 +14,7 @@ export interface IMapListener {
 })
 export class MapStylerDirective extends BaseWidgetDirective implements OnChanges {
     @Input() public id: string;
-    @Input() public styles: {
-        [name: string]: ({
-            [name: string]: (string | number)
-        })
-    };
+    @Input('cssStyles') public styles: IStyleMappings;
     @Input() public map: Element;
     @Output() public css = new EventEmitter<string>();
 

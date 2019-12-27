@@ -26,7 +26,7 @@ export class AMapComponent extends BaseWidgetDirective implements OnChanges {
     /** URL to the map SVG file */
     @Input() public src: string;
     /** Mapping of CSS styles to apply to the map */
-    @Input('styles') public style_map: IStyleMappings;
+    @Input('cssStyles') public style_map: IStyleMappings;
     /** Zoom level as a percentage */
     @Input() public zoom: number;
     /** Points of interest to render on the map */
