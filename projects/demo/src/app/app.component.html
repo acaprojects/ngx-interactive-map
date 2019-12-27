@@ -9,15 +9,22 @@
                 [styles]="model.map.styles"
                 [features]="model.map.poi"
                 [focus]="model.map.focus"
-            >Loading Map...</a-map>
+                >Loading Map...</a-map
+            >
         </div>
         <button (click)="toggleMap()">Toggle Map</button>
-        <button (click)="togglePin()">{{ model.show.pin ? 'Remove pin' : 'Add pin' }}</button>
-        <button (click)="toggleRadius()">{{ model.show.radius ? 'Remove radius' : 'Add radius' }}</button><br/>
-        {{ model.zoom * 100 }}%<br/>
+        <button (click)="togglePin()">
+            {{ model.show.pin ? 'Remove pin' : 'Add pin' }}
+        </button>
+        <button (click)="toggleRadius()">
+            {{ model.show.radius ? 'Remove radius' : 'Add radius' }}</button
+        ><br />
+        {{ model.zoom * 100 }}%<br />
         <button (click)="zoom(10)">Zoom in</button>
-        <button (click)="zoom(-10)">Zoom Out</button><br/>
-        {{ model.center | json }}<br/>
-        <button (click)="model.center = { x: .5, y: .5 }">Reset Position</button>
+        <button (click)="zoom(-10)">Zoom Out</button><br />
+        {{ model.center | json }}<br />
+        <button (click)="model.center = { x: 0.5, y: 0.5 }">
+            Reset Position
+        </button>
     </div>
 </div>

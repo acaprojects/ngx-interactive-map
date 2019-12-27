@@ -12,7 +12,6 @@ import * as dayjs from 'dayjs';
     encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
-
     public model: { [name: string]: any } = { show: {}, map: {} };
 
     public ngOnInit(): void {
@@ -21,7 +20,7 @@ export class AppComponent {
         this.model.map = {};
         this.model.map.src = 'assets/australia.svg';
         this.model.zoom = 1;
-        this.model.center = { x: .25, y: .75 };
+        this.model.center = { x: 0.25, y: 0.75 };
         this.model.count = Array(3).fill(0);
     }
 
@@ -36,17 +35,18 @@ export class AppComponent {
     }
 
     public toggleMap() {
-        this.model.map.src = this.model.map.src.indexOf('180') >= 0 ? 'assets/australia.svg' : 'assets/australia-180-rot.svg';
+        this.model.map.src =
+            this.model.map.src.indexOf('180') >= 0 ? 'assets/level_01.svg' : 'assets/australia-180-rot.svg';
     }
 
     public zoom(value: number) {
         if (value > 0) {
-            this.model.zoom = +(this.model.zoom * (1 + (value / 100))).toFixed(5);
+            this.model.zoom = +(this.model.zoom * (1 + value / 100)).toFixed(5);
             if (this.model.zoom > 10) {
                 this.model.zoom = 10;
             }
         } else if (value < 0) {
-            this.model.zoom = +(this.model.zoom * (1 / (1 - (value / 100)))).toFixed(5);
+            this.model.zoom = +(this.model.zoom * (1 / (1 - value / 100))).toFixed(5);
             if (this.model.zoom < 1) {
                 this.model.zoom = 1;
     }
@@ -58,7 +58,7 @@ export class AppComponent {
         if (this.model.show.radius) {
             this.model.map.poi.push({
                 id: 'Nyada',
-                coordinates:  { x: 3000, y: 3000 },
+                coordinates: { x: 3000, y: 3000 },
                 content: MapRangeComponent,
                 data: { text: `I'm somewhere in this circle`, diameter: 10 }
             });
@@ -70,11 +70,16 @@ export class AppComponent {
                 id: fixed ? 'AU-NSW' : 'Nyada',
                 coordinates: fixed ? null : { x: 5000, y: 7500 },
                 content: MapPinComponent,
-                data: { text: fixed ? 'NSW is here' : `I'm currently round here` }
+                data: {
+                    text: fixed ? 'NSW is here' : `I'm currently round here`
+                }
             });
             const focus: any = {};
-            if (fixed) { focus.id = 'AU-NSW'; }
-            else { focus.coordinates = { x: 5000, y: 7500 }; }
+            if (fixed) {
+                focus.id = 'AU-NSW';
+            } else {
+                focus.coordinates = { x: 5000, y: 7500 };
+            }
             this.model.map.focus = focus;
             this.model.map.styles = {
                 '#AU-NSW': { fill: ['#123456', '#345612', '#561234'][Math.floor(Math.random() * 3)] },

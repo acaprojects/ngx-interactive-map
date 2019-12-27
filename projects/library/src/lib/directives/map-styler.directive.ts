@@ -19,7 +19,7 @@ export class MapStylerDirective extends BaseWidgetDirective implements OnChanges
         })
     };
     @Input() public map: Element;
-    @Output() public css = new EventEmitter();
+    @Output() public css = new EventEmitter<string>();
 
     private model: { [name: string]: any } = {};
 

@@ -25,8 +25,8 @@ import { AMapFeature } from '../map-feature/map-feature.class';
 export class AMapComponent extends BaseWidgetDirective implements OnChanges {
     /** URL to the map SVG file */
     @Input() public src: string;
-    /** CSS styles to apply to the map */
-    @Input('styles') public css: IStyleMappings;
+    /** Mapping of CSS styles to apply to the map */
+    @Input('styles') public style_map: IStyleMappings;
     /** Zoom level as a percentage */
     @Input() public zoom: number;
     /** Points of interest to render on the map */
@@ -50,8 +50,8 @@ export class AMapComponent extends BaseWidgetDirective implements OnChanges {
     public map: SVGElement;
     /** List of processed map features */
     public render_features: AMapFeature[] = [];
-    /** Mapping of CSS styles */
-    public styles: IStyleMappings;
+    /** String of mapped CSS values */
+    public css: string;
     /** Processed zoom level value */
     public scale: number;
 
@@ -99,7 +99,7 @@ export class AMapComponent extends BaseWidgetDirective implements OnChanges {
      * Reset the position and scale to their intial values
      */
     public reset() {
-        this.postZoom(100);
+        this.postZoom(1);
         this.scale = 1;
         this.postCenter({ x: .5, y: .5 });
     }
