@@ -108,7 +108,7 @@ export class AMapComponent extends BaseWidgetDirective implements OnChanges {
      * Update the list of features keeping already existing feature
      */
     private updateFeatures() {
-        const features = this.focus && this.focus.content ? [this.focus, ...this.features] : this.features;
+        const features = this.features;
         this.render_features = (features || []).reduce((a, v) => {
             const feature = this.render_features.find(
                 i => i.id === v.id && i.content === v.content

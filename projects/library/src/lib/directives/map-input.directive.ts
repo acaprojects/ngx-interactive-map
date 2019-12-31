@@ -182,27 +182,25 @@ export class MapInputDirective extends BaseWidgetDirective implements OnChanges 
             if (!this.map) {
                 return this.timeout('focus', () => this.focusItem());
             }
-            if (!this.map_box) {
-                this.map_box = this.el.nativeElement.getBoundingClientRect();
-            }
+            this.map_box = this.el.nativeElement.getBoundingClientRect();
             const selector = this.focus.id ? `#${MapUtilities.cleanCssSelector(this.focus.id)}` : ''
             const el = this.focus.id ? this.map.querySelector(selector) : null;
             if (el) { // Focus on element
                 if (this.lookup[this.src][selector]) {
                     this.model.center = this.lookup[this.src][selector].center;
-                    this.focus.zoom ? this.focus.zoom / 100 : this.lookup[this.src][selector].scale;
+                    this.model.scale = this.focus.zoom ? this.focus.zoom / 100 : this.lookup[this.src][selector].scale;
                 } else {
                     const box = el.getBoundingClientRect();
-                    const map_box = this.el.nativeElement.getBoundingClientRect();
+                    const map_box = this.map.getBoundingClientRect();
                     this.model.center = {
                         x:  ((box.left + box.width / 2) - map_box.left) / map_box.width,
                         y:  ((box.top + box.height / 2) - map_box.top) / map_box.height
                     };
-                    this.model.scale = this.focus.zoom ? this.focus.zoom / 100 : MapUtilities.getFillScale(map_box, box) * .6;
                     this.lookup[this.src][selector] = {
-                        scale: MapUtilities.getFillScale(map_box, box) * .6,
+                        scale: Math.min(2, MapUtilities.getFillScale(map_box, box) * .4),
                         center: { ...this.model.center }
                     };
+                    this.model.scale = this.focus.zoom ? this.focus.zoom / 100 : this.lookup[this.src][selector].scale;
                 }
                 this.changePosition(true)
             } else if (this.focus.coordinates) { // Focus on coordinates

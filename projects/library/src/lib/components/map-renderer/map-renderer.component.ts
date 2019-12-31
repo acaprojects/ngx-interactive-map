@@ -24,14 +24,14 @@ export class MapRendererComponent extends BaseWidgetDirective implements OnInit,
     /** List of points of interest */
     @Input() public items: AMapFeature[];
     /** Change emitter for SVG DOM element */
-    @Output() public map = new EventEmitter();
+    @Output() public map = new EventEmitter<SVGElement>();
 
     /** Block to render SVG element */
-    @ViewChild('renderBlock', { static: true }) public render_block: ElementRef;
+    @ViewChild('renderBlock', { static: true }) public render_block: ElementRef<HTMLDivElement>;
     /** Canvas to render static images of map when zooming */
-    @ViewChild('canvas', { static: true }) private canvas: ElementRef;
-    @ViewChild('content', { static: true }) private content: ElementRef;
-    @ViewChild('container', { static: true }) private container: ElementRef;
+    @ViewChild('canvas', { static: true }) private canvas: ElementRef<HTMLCanvasElement>;
+    @ViewChild('content', { static: true }) private content: ElementRef<HTMLDivElement>;
+    @ViewChild('container', { static: true }) private container: ElementRef<HTMLDivElement>;
 
     public model: { [name: string]: any } = {};
 
