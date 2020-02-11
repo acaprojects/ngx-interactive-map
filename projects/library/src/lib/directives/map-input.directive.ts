@@ -145,9 +145,9 @@ export class MapInputDirective extends BaseWidgetDirective implements OnChanges 
         e.preventDefault();
         this.model.scale = this.scale || 1;
         const rate = (this.isIE ? 1.15 : 1.05);
-        this.model.scale *= (e.deltaY > 0 ? rate : (e.deltaY < 0 ? (1 / rate) : 1));
+        this.model.scale *= (e.deltaY < 0 ? rate : (e.deltaY > 0 ? (1 / rate) : 1));
         this.check();
-        this.scale = this.model.scale;
+        this.scale = +(this.model.scale * 10000).toFixed(0) / 10000;
         this.scaleChange.emit(this.scale);
     }
 
@@ -169,7 +169,7 @@ export class MapInputDirective extends BaseWidgetDirective implements OnChanges 
         this.model.scale = this.scale || 1;
         this.model.scale += this.model.in > 1 ? dz * this.model.in : dz;
         this.check();
-        this.scale = this.model.scale;
+        this.scale = +(this.model.scale * 10000).toFixed(0) / 10000;
         this.scaleChange.emit(this.scale);
         this.model.dz = e.scale;
     }
@@ -304,7 +304,7 @@ export class MapInputDirective extends BaseWidgetDirective implements OnChanges 
             this.center = this.model.center;
             this.centerChange.emit(this.center);
             if (scale) {
-                this.scale = this.model.scale;
+                this.scale = +(this.model.scale * 10000).toFixed(0) / 10000;
                 this.scaleChange.emit(this.scale);
             }
         }, 0);
