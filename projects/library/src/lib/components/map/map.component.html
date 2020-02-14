@@ -1,0 +1,8 @@
+<a-map-outlet
+    [map]="map"
+    [(zoom)]="zoom"
+    (zoomChange)="zoomChange.emit($event)"
+    [(center)]="center"
+    (centerChange)="centerChange.emit($event)"
+    (events)="events.emit($event)"
+></a-map-outlet>
