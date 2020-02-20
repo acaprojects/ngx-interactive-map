@@ -1,0 +1,26 @@
+<div
+    class="map-container"
+    #container
+    (window:resize)="updateContainerBox()"
+    map-input
+    [(zoom)]="zoom"
+    (zoomChange)="updateZoom($event)"
+    [(center)]="center"
+    (centerChange)="updateCenter($event)"
+    [map]="map"
+    [element]="map_element"
+    (click)="emitPointerPostion($event)"
+>
+    <div
+        class="map-outlet"
+        #element
+        [class.zooming]="zoom !== local_zoom"
+        [style.width]="width"
+        [style.height]="height"
+        [style.transform]="'translate(' + transformX + '%, ' + transformY + '%)'"
+    >
+        <div class="map" *ngIf="map" [innerHTML]="map.raw_data | safe"></div>
+        <map-overlay-outlet [zoom]="local_zoom" [center]="local_center" [items]="features"></map-overlay-outlet>
+        <map-text-outlet [items]="text"></map-text-outlet>
+    </div>
+</div>
