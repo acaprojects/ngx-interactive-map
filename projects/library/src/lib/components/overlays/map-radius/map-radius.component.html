@@ -1,0 +1,4 @@
+<div class="radius" [style.height]="diameter * zoom + 'em'" [style.width]="diameter * zoom + 'em'">
+    <div class="background" [style.background-color]="fill"></div>
+    <div class="text" *ngIf="text">{{ text }}</div>
+</div>
