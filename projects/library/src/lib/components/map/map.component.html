@@ -5,4 +5,7 @@
     [(center)]="center"
     (centerChange)="centerChange.emit($event)"
     (events)="events.emit($event)"
+    [features]="feature_list"
+    [text]="text_list"
+    [class.locked]="options?.lock"
 ></a-map-outlet>

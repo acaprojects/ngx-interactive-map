@@ -5,3 +5,9 @@
     width: 100%;
     overflow: hidden;
 }
+
+a-map-outlet {
+    &.locked {
+        pointer-events: none;
+    }
+}

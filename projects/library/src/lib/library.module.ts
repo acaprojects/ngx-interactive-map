@@ -8,37 +8,36 @@ import { version } from './settings';
 import * as dayjs_api from 'dayjs';
 const dayjs = dayjs_api;
 
-import { AMapComponent } from './components/map/map.component';
-import { MapOverlayOutletComponent } from './components/map-overlay-outlet/map-overlay-outlet.component';
-import { MapRendererComponent } from './components/map-renderer/map-renderer.component';
+import { MapComponent } from './components/map/map.component';
 
-import { MapInputDirective } from './directives/map-input.directive';
-import { MapStylerDirective } from './directives/map-styler.directive';
-
-import { MapPinComponent } from './components/overlays/map-pin/map-pin.component';
-import { MapRangeComponent } from './components/overlays/map-range/map-range.component';
 import { BaseWidgetDirective } from './base.directive';
+import { MapOutletComponent } from './components/map-outlet/map-outlet.component';
+import { MapZoomDirective } from './directives/map-zoom.directive';
+import { MapCenterDirective } from './directives/map-center.directive';
+import { MapOverlayOutletComponent } from './components/map-overlay-outlet/map-overlay-outlet.component';
+import { MapTextOutletComponent } from './components/map-text-outlet/map-text-outlet.component';
+import { MapPinComponent } from './components/overlays/map-pin/map-pin.component';
+import { MapRadiusComponent } from './components/overlays/map-radius/map-radius.component';
 
 @NgModule({
     declarations: [
         BaseWidgetDirective,
-        AMapComponent,
+        MapComponent,
+        MapOutletComponent,
+        MapZoomDirective,
+        MapCenterDirective,
         MapOverlayOutletComponent,
-        MapRendererComponent,
+        MapTextOutletComponent,
         MapPinComponent,
-        MapRangeComponent,
-        MapInputDirective,
-        MapStylerDirective
+        MapRadiusComponent
     ],
     imports: [CommonModule, APipesModule, HttpClientModule],
     exports: [
-        AMapComponent,
-        MapPinComponent,
-        MapRangeComponent
+        MapComponent
     ],
     entryComponents: [
         MapPinComponent,
-        MapRangeComponent
+        MapRadiusComponent
     ]
 })
 export class LibraryModule {
