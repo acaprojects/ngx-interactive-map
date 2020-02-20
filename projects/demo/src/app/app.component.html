@@ -1,17 +1,23 @@
 <div class="app">
-    <div class="test" *ngIf="model.map">
-        <div class="map">
-            <a-map
-                [(zoom)]="model.zoom"
-                [(center)]="model.center"
-                [src]="model.map.src"
-                [listeners]="model.map.listeners"
-                [cssStyles]="model.map.styles"
-                [features]="model.map.poi"
-                [focus]="model.map.focus"
-                >Loading Map...</a-map
-            >
+    <div class="map-display" *ngIf="model.map">
+        <a-map
+            [(zoom)]="model.zoom"
+            [(center)]="model.center"
+            [src]="model.map.src"
+            [listeners]="model.map.listeners"
+            [css]="model.map.styles"
+            [features]="model.map.poi"
+            [text]="model.map.text"
+            [focus]="model.map.focus"
+            (events)="log($event)"
+            >Loading Map...</a-map
+        >
+        <div class="display">
+            <div class="item">{{ model.zoom * 100 }}%</div>
+            <div class="item">{{ model.center | json }}</div>
         </div>
+    </div>
+    <div class="controls">
         <button (click)="toggleMap()">Toggle Map</button>
         <button (click)="togglePin()">
             {{ model.show.pin ? 'Remove pin' : 'Add pin' }}
@@ -19,11 +25,9 @@
         <button (click)="toggleRadius()">
             {{ model.show.radius ? 'Remove radius' : 'Add radius' }}</button
         ><br />
-        {{ model.zoom * 100 }}%<br />
         <button (click)="zoom(10)">Zoom in</button>
         <button (click)="zoom(-10)">Zoom Out</button><br />
-        {{ model.center | json }}<br />
-        <button (click)="model.center = { x: 0.5, y: 0.5 }">
+        <button (click)="model.center = { x: 0.5, y: 0.5 }; model.zoom = 1">
             Reset Position
         </button>
     </div>

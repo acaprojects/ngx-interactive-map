@@ -83,3 +83,20 @@ button {
     margin: .25rem;
     flex: 1
 }
+
+.map svg {
+    * {
+        shape-rendering: optimizeSpeed;
+    }
+}
+
+.map-outlet {
+    &.zooming {
+        svg {
+            [id*="plant"],
+            [id*="chair"] {
+                display: none;
+            }
+        }
+    }
+}
