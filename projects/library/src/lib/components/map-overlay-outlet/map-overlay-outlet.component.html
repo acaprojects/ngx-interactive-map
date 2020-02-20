@@ -1,0 +1,20 @@
+<ng-container *ngIf="items && items.length">
+    <ng-container *ngFor="let item of items; trackBy:trackByFn">
+        <div
+            *ngIf="item.coordinates"
+            class="map-overlay"
+            [style.top]="(item.coordinates.y * 100) + '%'"
+            [style.left]="(item.coordinates.x * 100) + '%'"
+            [style.transform]="'rotate(' + rotation + 'deg)'"
+            [ngSwitch]="item.content_type"
+        >
+            <ng-container *ngSwitchCase="'component'">
+                <ng-container *ngComponentOutlet="item.content; injector: (injectors || {})[item.id]"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'template'">
+                <ng-container *ngTemplateOutlet="item.content"></ng-container>
+            </ng-container>
+            <div *ngSwitchDefault [innerHTML]="item.content"></div>
+        </div>
+    </ng-container>
+</ng-container>

@@ -1,0 +1,14 @@
+<ng-container *ngIf="items && items.length">
+    <ng-container *ngFor="let item of items">
+        <div
+            *ngIf="item.coordinates"
+            class="map-text"
+            [style.top]="(item.coordinates.y * 100) + '%'"
+            [style.left]="(item.coordinates.x * 100) + '%'"
+            [style.transform]="'rotate(' + rotation + 'deg)'"
+
+        >
+            <div class="text">{{ item.content }}</div>
+        </div>
+    </ng-container>
+</ng-container>
