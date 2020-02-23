@@ -50,22 +50,25 @@ export class MapOutletComponent implements OnInit, OnChanges {
     @Output() public centerChange = new EventEmitter<Point>();
     /** Emitter for changes to the zoom value */
     @Output() public events = new EventEmitter<MapEvent>();
+    /** Local zoom value used to rendered the map */
+    public local_zoom: number = 1;
+    /** Local zoom value used to rendered the map */
+    public local_center: Point = { x: 0.5, y: 0.5 };
+
     /** Element reference to the map display element */
-    @ViewChild('element', { static: true }) public map_element: ElementRef<HTMLDivElement>;
+    @ViewChild('element', { static: true }) private map_element: ElementRef<HTMLDivElement>;
     /** Element reference to the map container element */
     @ViewChild('container', { static: true }) private _container: ElementRef<HTMLDivElement>;
     /** Bounding box for the map */
     private _box: ClientRect;
-    /** Local zoom value used to rendered the map */
-    public local_zoom: number = 1;
-    /** Local zoom value used to rendered the map */
-    public local_center: Point = { x: .5, y: .5 };
     /** Promise for handling changes to zoom values */
     private zoom_promise: Promise<void>;
     /** Promise for handling changes to center position values */
     private center_promise: Promise<void>;
     /** Store of latest difference change between zoom values */
     private _zoom_diff: number;
+
+    private dimensions: Point = { x: 1, y: 1 };
 
     /** Width of the map outlet container */
     public get width(): string {
@@ -94,9 +97,13 @@ export class MapOutletComponent implements OnInit, OnChanges {
         return -(this.local_center ? this.local_center.y : 0.5) * 100;
     }
 
-    /**  */
+    /** Get width of the map render box */
     public get size_dimension(): number {
-        return this._box ? this._box.width : 100;
+        return this._box
+            ? this.dimensions.y < this.map.dimensions.y
+                ? this._box.width * (this.dimensions.y / this.map.dimensions.y)
+                : this._box.width
+            : 100;
     }
 
     public ngOnInit(): void {
@@ -130,6 +137,7 @@ export class MapOutletComponent implements OnInit, OnChanges {
     public updateContainerBox() {
         if (this._container && this._container.nativeElement) {
             this._box = this._container.nativeElement.getBoundingClientRect();
+            this.dimensions = { x: 1, y: this._box.height / this._box.width };
         }
     }
 
@@ -154,7 +162,7 @@ export class MapOutletComponent implements OnInit, OnChanges {
                 }
                 return not_done;
             });
-            this.zoom_promise.then(() => this.zoom_promise = null);
+            this.zoom_promise.then(() => (this.zoom_promise = null));
         }
     }
 
@@ -179,12 +187,16 @@ export class MapOutletComponent implements OnInit, OnChanges {
                     y: Math.max(0.01, Math.min(0.05, Math.abs(change.y) / 5))
                 };
                 this.local_center = {
-                    x: this.local_center.x + (Math.abs(change.x) > change_value.x ? (direction.x < 0 ? -1 : 1) * change_value.x : change.x),
-                    y: this.local_center.y + (Math.abs(change.y) > change_value.y ? (direction.y < 0 ? -1 : 1) * change_value.y : change.y),
+                    x:
+                        this.local_center.x +
+                        (Math.abs(change.x) > change_value.x ? (direction.x < 0 ? -1 : 1) * change_value.x : change.x),
+                    y:
+                        this.local_center.y +
+                        (Math.abs(change.y) > change_value.y ? (direction.y < 0 ? -1 : 1) * change_value.y : change.y)
                 };
                 return Math.abs(change.x) < change_value.x && Math.abs(change.y) < change_value.y ? 0 : 1;
             });
-            this.center_promise.then(() => this.center_promise = null);
+            this.center_promise.then(() => (this.center_promise = null));
         }
     }
 }
