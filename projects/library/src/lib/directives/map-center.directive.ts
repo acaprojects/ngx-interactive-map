@@ -48,7 +48,7 @@ export class MapCenterDirective implements OnDestroy {
     }
 
     @HostListener('touchstart', ['$event'])
-    public startMoveTouch(event: TouchEvent) {
+    public startMoveTouch(event: any) {
         this.startMove(event);
     }
 
@@ -60,10 +60,26 @@ export class MapCenterDirective implements OnDestroy {
         this.cleanListeners();
     }
 
+    /** Clean up existing listeners */
+    public cleanListeners() {
+        if (this._move_listener) {
+            this._move_listener();
+            this._move_listener = null;
+        }
+        if (this._end_listener) {
+            this._end_listener();
+            this._end_listener = null;
+        }
+    }
+
     private startMove(event: MouseEvent | TouchEvent) {
+        event.preventDefault();
         this.updateHostElementBox();
         this._move_start = eventToPoint(event);
         this.cleanListeners();
+        if ((event as any).touches && (event as any).touches.length !== 1) {
+            return;
+        }
         if (event instanceof MouseEvent) {
             this._move_listener = this._renderer.listen('window', 'mousemove', (e: MouseEvent) =>
                 this.move(e)
@@ -89,6 +105,7 @@ export class MapCenterDirective implements OnDestroy {
         if (!this._box) { return; }
         const position = eventToPoint(event);
         if (!insideRect(position, this._parent_box)) { return; }
+        event.preventDefault();
         const diff = diffPoints(position, this._move_start);
         const width = this._box.width;
         const height = this._box.height;
@@ -111,18 +128,6 @@ export class MapCenterDirective implements OnDestroy {
         }
         if (this._element && this._element.nativeElement) {
             this._parent_box = this._element.nativeElement.getBoundingClientRect();
-        }
-    }
-
-    /** Clean up existing listeners */
-    private cleanListeners() {
-        if (this._move_listener) {
-            this._move_listener();
-            this._move_listener = null;
-        }
-        if (this._end_listener) {
-            this._end_listener();
-            this._end_listener = null;
         }
     }
 }

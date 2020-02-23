@@ -26,7 +26,7 @@ export class MapRadiusComponent implements OnInit, OnDestroy {
 
     /** Diameter of the radius circle */
     public get diameter(): number {
-        return (this._data ? this._data.diameter : 0) || 10;
+        return (this._data ? this._data.diameter : 0) || 5;
     }
 
     public get text(): string {

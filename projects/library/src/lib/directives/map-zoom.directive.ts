@@ -1,6 +1,7 @@
-import { Directive, Input, EventEmitter, Output, ElementRef, HostListener, SimpleChanges } from '@angular/core';
+import { Directive, Input, EventEmitter, Output, ElementRef, HostListener, SimpleChanges, Renderer2 } from '@angular/core';
 import { Point } from '../helpers/type.helpers';
 import { eventToPoint } from '../helpers/map.helpers';
+import { MapCenterDirective } from './map-center.directive';
 
 @Directive({
     selector: '[map-input][zoom]'
@@ -22,7 +23,13 @@ export class MapZoomDirective {
     /** Bound box of the host element */
     private _parent_box: ClientRect;
 
-    constructor(private _element: ElementRef<HTMLDivElement>) {
+    private _pinch_listener: () => void;
+
+    private _pinch_end_listener: () => void;
+
+    private _pinch_delta: number;
+
+    constructor(private _element: ElementRef<HTMLDivElement>, private _renderer: Renderer2, private _move_directive: MapCenterDirective) {
         this.updateHostElementBox();
     }
 
@@ -32,13 +39,28 @@ export class MapZoomDirective {
         }
     }
 
+    public ngOnDestroy(): void {
+        this.clearListeners();
+    }
+
     @HostListener('wheel', ['$event'])
     public wheelScroll(event: WheelEvent) {
+        event.preventDefault();
         const delta = -event.deltaY / 100;
         const new_zoom = Math.min(10, Math.max(1, this.zoom + delta / 5));
         this.updateCenter(this.zoom, new_zoom, eventToPoint(event));
         this.zoom = Math.floor(new_zoom * 1000) / 1000;
         this.zoomChange.emit(this.zoom);
+    }
+
+    @HostListener('pinchstart', ['$event'])
+    public pinchStart(event: any) {
+        console.log('Event:', event);
+        this._pinch_delta = event.scale || 1;
+        event.preventDefault();
+        if (this._move_directive) { this._move_directive.cleanListeners(); }
+        this._pinch_listener = this._renderer.listen('window', 'pinchmove', (e) => this.onPinch(e));
+        this._pinch_end_listener = this._renderer.listen('window', 'pinchend', (e) => this.clearListeners());
     }
 
     @HostListener('dblclick', ['$event'])
@@ -47,6 +69,17 @@ export class MapZoomDirective {
         this.updateCenter(this.zoom, new_zoom, eventToPoint(event));
         this.zoom = new_zoom;
         this.zoomChange.emit(this.zoom);
+    }
+
+    public onPinch(event: any) {
+        event.preventDefault();
+        const delta = (event.scale - this._pinch_delta) / 4;
+        const delta_zoom = delta < 0 ? delta * 4 : delta;
+        console.log('Delta:', delta);
+        const new_zoom = Math.min(10, Math.max(1, this.zoom * (1 + delta_zoom)));
+        this.zoom = new_zoom;
+        this.zoomChange.emit(this.zoom);
+        this._pinch_delta = event.scale || 1;
     }
 
 
@@ -77,6 +110,17 @@ export class MapZoomDirective {
         }
         if (this._element && this._element.nativeElement) {
             this._parent_box = this._element.nativeElement.getBoundingClientRect();
+        }
+    }
+
+    private clearListeners() {
+        if (this._pinch_listener) {
+            this._pinch_listener();
+            this._pinch_listener = null;
+        }
+        if (this._pinch_end_listener) {
+            this._pinch_end_listener();
+            this._pinch_end_listener = null;
         }
     }
 }
