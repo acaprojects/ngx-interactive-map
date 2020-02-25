@@ -62,7 +62,7 @@ export class MapOutletComponent implements OnInit, OnChanges, OnDestroy {
     public local_center: Point = { x: 0.5, y: 0.5 };
 
     /** Element reference to the map display element */
-    @ViewChild('element', { static: true }) private map_element: ElementRef<HTMLDivElement>;
+    @ViewChild('element', { static: true }) public map_element: ElementRef<HTMLDivElement>;
     /** Element reference to the map container element */
     @ViewChild('container', { static: true }) private _container: ElementRef<HTMLDivElement>;
     /** Bounding box for the map */
