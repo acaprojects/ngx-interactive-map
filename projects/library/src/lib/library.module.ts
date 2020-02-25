@@ -33,7 +33,9 @@ import { MapRadiusComponent } from './components/overlays/map-radius/map-radius.
     ],
     imports: [CommonModule, APipesModule, HttpClientModule],
     exports: [
-        MapComponent
+        MapComponent,
+        MapPinComponent,
+        MapRadiusComponent
     ],
     entryComponents: [
         MapPinComponent,
@@ -41,7 +43,7 @@ import { MapRadiusComponent } from './components/overlays/map-radius/map-radius.
     ]
 })
 export class LibraryModule {
-    public static version = 'local-dev';
+    public static version = '0.0.0-development';
     private static init = false;
     readonly build = dayjs();
 
