@@ -20,7 +20,7 @@
         [style.transform]="'translate(' + transformX + '%, ' + transformY + '%)'"
     >
         <div class="map" *ngIf="map" [innerHTML]="map.raw_data | safe"></div>
-        <map-overlay-outlet [zoom]="local_zoom" [center]="local_center" [items]="features"></map-overlay-outlet>
         <map-text-outlet [zoom]="local_zoom" [items]="text"></map-text-outlet>
+        <map-overlay-outlet [zoom]="local_zoom" [center]="local_center" [items]="features"></map-overlay-outlet>
     </div>
 </div>
