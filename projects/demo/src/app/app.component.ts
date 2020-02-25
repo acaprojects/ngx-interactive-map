@@ -74,8 +74,8 @@ export class AppComponent {
             this.model.fixed = !this.model.fixed;
             const fixed = this.model.fixed;
             this.model.map.poi.push({
-                id: fixed ? 'area-10.05-status' : 'Nyada',
-                coordinates: fixed ? null : { x: 5000, y: 7500 },
+                id: fixed ? 'area-10.05-status' : undefined,
+                coordinates: fixed ? null : { x: 7500, y: 1000 },
                 content: MapPinComponent,
                 data: {
                     text: fixed ? 'NSW is here' : `I'm currently round here`
