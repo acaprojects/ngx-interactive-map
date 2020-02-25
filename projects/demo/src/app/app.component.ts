@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-import { MapRangeComponent } from 'projects/library/src/lib/components/overlays/map-range/map-range.component';
 import { MapPinComponent } from 'projects/library/src/lib/components/overlays/map-pin/map-pin.component';
+import { MapRadiusComponent } from 'projects/library/src/lib/components/overlays/map-radius/map-radius.component';
 
 import * as dayjs from 'dayjs';
 
@@ -19,6 +19,11 @@ export class AppComponent {
         this.model.show = {};
         this.model.map = {};
         this.model.map.src = 'assets/australia.svg';
+        this.model.map.text = [
+            { id: 'area-10.06-status', content: 'Meeting Room\n10.06' },
+            { id: 'area-10.05-status', content: 'Meeting Room\n10.05' },
+            { id: 'scanner-2', content: 'Scanner', show_after_zoom: 2, styles: { 'color': 'red' } }
+        ];
         this.model.zoom = 1;
         this.model.center = { x: 0.25, y: 0.75 };
         this.model.count = Array(3).fill(0);
@@ -57,10 +62,9 @@ export class AppComponent {
         this.model.map.poi = [];
         if (this.model.show.radius) {
             this.model.map.poi.push({
-                id: 'Nyada',
                 coordinates: { x: 3000, y: 3000 },
-                content: MapRangeComponent,
-                data: { text: `I'm somewhere in this circle`, diameter: 10 }
+                content: MapRadiusComponent,
+                data: { text: `I'm somewhere in this circle`, diameter: 5 }
             });
         }
         if (this.model.show.pin) {
@@ -74,11 +78,11 @@ export class AppComponent {
                     text: fixed ? 'NSW is here' : `I'm currently round here`
                 }
             });
-            const focus: any = {};
+            let focus: any = null;
             if (fixed) {
-                focus.id = 'AU-NSW';
+                focus = 'area-10.05-status';
             } else {
-                focus.coordinates = { x: 5000, y: 7500 };
+                focus = { x: 0.75, y: 0.25 };
             }
             this.model.map.focus = focus;
             this.model.map.styles = {

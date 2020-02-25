@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { MapRenderFeature } from '../../classes/map-render-feature';
+import { MapTextFeature } from '../../helpers/map.interfaces';
 
 @Component({
     selector: 'map-text-outlet',
@@ -9,7 +9,9 @@ import { MapRenderFeature } from '../../classes/map-render-feature';
 })
 export class MapTextOutletComponent {
     /** List of text items to render on top of the map */
-    @Input() items: MapRenderFeature[] = [];
+    @Input() items: MapTextFeature[] = [];
+    /** Rotation of the map */
+    @Input() zoom: number = 1;
     /** Rotation of the map */
     @Input() rotation: number = 0;
 }

@@ -15,6 +15,10 @@ export interface MapFeature<T = any> {
 
 export interface MapTextFeature extends MapFeature {
     readonly content: string;
+    /** Minimum zoom level to show the text feature */
+    readonly show_after_zoom?: number;
+    /** Map of CSS properties to their values */
+    readonly styles?: { [style: string]: string };
 }
 
 export interface MapState {

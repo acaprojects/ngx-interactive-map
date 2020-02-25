@@ -5,6 +5,8 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AInteractiveMapModule } from 'projects/library/src/public-api';
 
+import 'hammerjs';
+
 @NgModule({
   declarations: [
     AppComponent

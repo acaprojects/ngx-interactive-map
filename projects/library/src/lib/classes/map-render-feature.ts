@@ -13,6 +13,8 @@ export class MapRenderFeature {
     public readonly content: RenderFeature;
     /** Data to pass to the content */
     public readonly data: any;
+    /** Data to pass to the content */
+    public readonly show_after_zoom: number;
 
     /** Type of content being rendered by this feature */
     public get content_type(): 'component' | 'template' | 'html' {
@@ -28,7 +30,8 @@ export class MapRenderFeature {
         this.id = data.id || JSON.stringify(coordinates);
         this.coordinates = coordinates;
         this.content = data.content;
-        this.data = data.data;
+        this.data = data.data || data.styles;
+        this.show_after_zoom = data.show_after_zoom;
     }
 
     private processCoordinates(data: string | Point, map: RenderableMap): Point {
