@@ -18,7 +18,7 @@ export class AppComponent {
         this.updatePointsOfInterest();
         this.model.show = {};
         this.model.map = {};
-        this.model.map.src = 'assets/australia.svg';
+        this.model.map.src = 'assets/level_10.svg';
         this.model.map.text = [
             { id: 'area-10.06-status', content: 'Meeting Room\n10.06' },
             { id: 'area-10.05-status', content: 'Meeting Room\n10.05' },
@@ -44,7 +44,7 @@ export class AppComponent {
 
     public toggleMap() {
         this.model.map.src =
-            this.model.map.src.indexOf('180') >= 0 ? 'assets/level_01.svg' : 'assets/australia-180-rot.svg';
+            this.model.map.src.indexOf('180') >= 0 ? 'assets/level_10.svg' : 'assets/australia-180-rot.svg';
     }
 
     public zoom(value: number) {
@@ -57,7 +57,7 @@ export class AppComponent {
             this.model.zoom = +(this.model.zoom * (1 / (1 - value / 100))).toFixed(5);
             if (this.model.zoom < 1) {
                 this.model.zoom = 1;
-    }
+            }
         }
     }
 
@@ -74,7 +74,7 @@ export class AppComponent {
             this.model.fixed = !this.model.fixed;
             const fixed = this.model.fixed;
             this.model.map.poi.push({
-                id: fixed ? 'AU-NSW' : 'Nyada',
+                id: fixed ? 'area-10.05-status' : 'Nyada',
                 coordinates: fixed ? null : { x: 5000, y: 7500 },
                 content: MapPinComponent,
                 data: {
@@ -89,20 +89,26 @@ export class AppComponent {
             }
             this.model.map.focus = focus;
             this.model.map.styles = {
-                '#AU-NSW': { fill: ['#123456', '#345612', '#561234'][Math.floor(Math.random() * 3)] },
-                '#AU.NT:hover': {
-                    fill: ['#654321', '#436521', '#216543'][Math.floor(Math.random() * 3)],
+                '#area-10.05-status': {
+                    fill: ['#123456', '#345612', '#561234'][Math.floor(Math.random() * 3)],
                     transition: 'fill 200ms'
+                },
+                '#area-10.05-status:hover': {
+                    fill: ['#654321', '#436521', '#216543'][Math.floor(Math.random() * 3)]
                 }
             };
         }
         if (this.model.show.hover) {
             this.model.map.poi.push({
-                id: 'AU.NT',
+                id: 'area-10.05-status',
                 coordinates: null,
                 content: MapPinComponent,
                 data: { text: 'This state is WA' }
             });
         }
+    }
+
+    log(content) {
+        console.log('Map Event:', content);
     }
 }
