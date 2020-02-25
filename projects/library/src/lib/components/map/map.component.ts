@@ -1,13 +1,12 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy, Output, EventEmitter, Renderer2 } from '@angular/core';
 
 import { Point, HashMap, MapOptions, MapEvent } from '../../helpers/type.helpers';
 import { MapRenderFeature } from '../../classes/map-render-feature';
 import { MapService } from '../../services/map.service';
 import { RenderableMap } from '../../classes/renderable-map';
-import { MapListenerFeature } from '../../classes/map-listener-feature';
 import { MapStyles } from '../../classes/map-styles';
 import { log } from '../../settings';
-import { MapFeature, MapTextFeature } from '../../helpers/map.interfaces';
+import { MapFeature, MapTextFeature, MapListener } from '../../helpers/map.interfaces';
 
 @Component({
   selector: 'a-map',
@@ -39,7 +38,7 @@ export class MapComponent implements OnInit, OnChanges, OnDestroy {
     /** List of elements to render on top of the map */
     @Input() public text: MapTextFeature[] = [];
     /** List of listeners for elements on the map */
-    @Input() public listeners: MapListenerFeature[] = [];
+    @Input() public listeners: MapListener[] = [];
     /** Mapping of CSS selectors to override styles */
     @Input() public css: HashMap<HashMap<string>> = {};
     /** Element or Point to focus the map on */

@@ -27,3 +27,12 @@ export interface MapState {
     /** Current center point of the map */
     readonly center: Point;
 }
+
+export interface MapListener {
+    /** ID of the element to listen to events on */
+    readonly id: string;
+    /** Name of the event to listen for */
+    readonly event: string;
+    /** Callback when the event occurs */
+    readonly callback: (event: Event) => void;
+}

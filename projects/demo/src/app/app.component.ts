@@ -24,6 +24,9 @@ export class AppComponent {
             { id: 'area-10.05-status', content: 'Meeting Room\n10.05' },
             { id: 'scanner-2', content: 'Scanner', show_after_zoom: 2, styles: { 'color': 'red' } }
         ];
+        this.model.map.listeners = [
+            { id: 'area-10.06-status', event: 'click', callback: () => console.log('Clicked: 10.06') }
+        ];
         this.model.zoom = 1;
         this.model.center = { x: 0.25, y: 0.75 };
         this.model.count = Array(3).fill(0);

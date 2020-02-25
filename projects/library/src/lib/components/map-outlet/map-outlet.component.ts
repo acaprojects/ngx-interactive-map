@@ -7,20 +7,24 @@ import {
     EventEmitter,
     Output,
     SimpleChanges,
-    OnChanges
+    OnChanges,
+    Renderer2,
+    OnDestroy
 } from '@angular/core';
 
 import { RenderableMap } from '../../classes/renderable-map';
 import { Point, MapEvent } from '../../helpers/type.helpers';
-import { eventToPoint, staggerChange } from '../../helpers/map.helpers';
+import { eventToPoint, staggerChange, cleanCssSelector } from '../../helpers/map.helpers';
 import { MapRenderFeature } from '../../classes/map-render-feature';
+import { MapListener } from '../../helpers/map.interfaces';
+import { log } from '../../settings';
 
 @Component({
     selector: 'a-map-outlet',
     templateUrl: './map-outlet.component.html',
     styleUrls: ['./map-outlet.component.scss']
 })
-export class MapOutletComponent implements OnInit, OnChanges {
+export class MapOutletComponent implements OnInit, OnChanges, OnDestroy {
     /** Details of the map */
     @Input() map: RenderableMap;
     /** Zoom level of the map as a whole number. 1 = 100% zoom */
@@ -42,6 +46,8 @@ export class MapOutletComponent implements OnInit, OnChanges {
     @Input() public center: Point;
     /** List of features to render over the map */
     @Input() public features: MapRenderFeature[] = [];
+    /** List of features to render over the map */
+    @Input() public listeners: MapListener[] = [];
     /** List of text to render over the map */
     @Input() public text: MapRenderFeature[] = [];
     /** Emitter for changes to the zoom value */
@@ -69,6 +75,8 @@ export class MapOutletComponent implements OnInit, OnChanges {
     private _zoom_diff: number;
 
     private dimensions: Point = { x: 1, y: 1 };
+    /** List of active listeners */
+    private _event_handlers: (() => void)[] = [];
 
     /** Width of the map outlet container */
     public get width(): string {
@@ -106,6 +114,8 @@ export class MapOutletComponent implements OnInit, OnChanges {
             : 100;
     }
 
+    constructor(private _renderer: Renderer2) { }
+
     public ngOnInit(): void {
         this.updateContainerBox();
     }
@@ -117,6 +127,15 @@ export class MapOutletComponent implements OnInit, OnChanges {
         if (changes.center) {
             this.staggerCenter();
         }
+        if (changes.listeners || changes.map) {
+            this.updateListeners();
+        }
+    }
+
+    public ngOnDestroy(): void {
+        this._event_handlers.forEach(item => item ? item() : '');
+        delete this._event_handlers;
+        this._event_handlers = [];
     }
 
     /**
@@ -141,11 +160,20 @@ export class MapOutletComponent implements OnInit, OnChanges {
         }
     }
 
+
+    /**
+     * Update the zoom level of the map
+     * @param new_zoom New zoom level
+     */
     public updateZoom(new_zoom: number) {
         this.zoomChange.emit(new_zoom);
         this.staggerZoom();
     }
 
+
+    /**
+     * Stagger the changes of the zoom value to have it animate smoothly
+     */
     private staggerZoom() {
         this._zoom_diff = Math.abs(this.zoom - this.local_zoom);
         if (!this.zoom_promise) {
@@ -166,11 +194,18 @@ export class MapOutletComponent implements OnInit, OnChanges {
         }
     }
 
+    /**
+     * Update the center location of the map
+     * @param new_center New center coordinates
+     */
     public updateCenter(new_center: Point) {
         this.centerChange.emit(new_center);
         this.staggerCenter();
     }
 
+    /**
+     * Stagger the changes of the center values to have it animate smoothly
+     */
     private staggerCenter() {
         if (!this.center_promise) {
             this.center_promise = staggerChange(1, () => {
@@ -197,6 +232,32 @@ export class MapOutletComponent implements OnInit, OnChanges {
                 return Math.abs(change.x) < change_value.x && Math.abs(change.y) < change_value.y ? 0 : 1;
             });
             this.center_promise.then(() => (this.center_promise = null));
+        }
+    }
+
+    /**
+     * Update event handlers for map elements
+     */
+    private updateListeners(): void {
+        if (!this.map_element || !this.map) {
+            setTimeout(() => this.updateListeners(), 50);
+            return;
+        }
+        this._event_handlers.forEach(item => item ? item() : '');
+        delete this._event_handlers;
+        this._event_handlers = [];
+        for (const item of this.listeners) {
+            if (this.map.available_ids.indexOf(item.id) >= 0) {
+                const selector = `#${cleanCssSelector(item.id)}`;
+                const element = this.map_element.nativeElement.querySelector(selector);
+                if (element) {
+                    this._event_handlers.push(
+                        this._renderer.listen(element, item.event, item.callback)
+                    );
+                    continue;
+                }
+            }
+            log('LISTEN', `Update to listen to "${item.event}" on element "${item.id}"`);
         }
     }
 }
