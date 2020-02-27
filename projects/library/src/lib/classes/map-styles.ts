@@ -37,7 +37,7 @@ export class MapStyles {
         let css = '';
         for (const selector in this.styles) {
             if (this.styles.hasOwnProperty(selector)) {
-                let style = `.map [map-${this.map ? this.map.id : '0'}] ${cleanCssSelector(selector)} { `;
+                let style = `.map[id="${this.map ? this.map.id : 'map-0'}"] ${cleanCssSelector(selector)} { `;
                 for (const property in this.styles[selector]) {
                     if (this.styles[selector][property]) {
                         style += `${property}: ${this.styles[selector][property]}; `;
