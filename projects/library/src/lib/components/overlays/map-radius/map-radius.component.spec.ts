@@ -3,8 +3,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MapRadiusComponent } from './map-radius.component';
 import { BehaviorSubject } from 'rxjs';
-import { MapState } from '../../../helpers/map.interfaces';
-import { MAP_STATE, MAP_OVERLAY_DATA } from '../../map-overlay-outlet/map-overlay-outlet.component';
+import { MapState, MAP_STATE, MAP_OVERLAY_DATA } from '../../../helpers/map.interfaces';
 
 describe('MapRadiusComponent', () => {
     let component: MapRadiusComponent;

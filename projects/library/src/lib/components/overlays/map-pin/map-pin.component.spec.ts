@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MapPinComponent } from './map-pin.component';
-import { MAP_OVERLAY_DATA } from '../../map-overlay-outlet/map-overlay-outlet.component';
+import { MAP_OVERLAY_DATA } from '../../../helpers/map.interfaces';
 
 describe('MapPinComponent', () => {
     let component: MapPinComponent;
