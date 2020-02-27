@@ -1,6 +1,14 @@
-import { TemplateRef, Type } from '@angular/core';
+import { TemplateRef, Type, InjectionToken } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 import { Point } from './type.helpers';
+
+/** Emitter for changes to the state of the map */
+export const MAP_STATE = new InjectionToken<BehaviorSubject<MapState>>('MapState');
+/** Location of the overlay component or template on the map */
+export const MAP_LOCATION = new InjectionToken<Point>('MapLocation');
+/** Data to pass to the overlay component or template */
+export const MAP_OVERLAY_DATA = new InjectionToken<any>('MapOverlayData');
 
 export interface MapFeature<T = any> {
     /** Map element id attribute to associate the feature with */

@@ -83,17 +83,14 @@ export class MapOutletComponent implements OnInit, OnChanges, OnDestroy {
         if (!this.map) {
             return '0';
         }
-        return `${(this.local_zoom * this.size_dimension).toFixed(2)}px`;
+        return `${(this.local_zoom * this.size_dimension * .9).toFixed(2)}px`;
     }
     /** Height of the map outlet container */
     public get height(): string {
         if (!this.map) {
             return '0';
         }
-        const height =
-            this.map.dimensions.y > this.map.dimensions.x
-                ? this.local_zoom * this.size_dimension
-                : this.local_zoom * this.size_dimension * this.map.dimensions.y;
+        const height = (this.local_zoom * this.size_dimension * this.map.dimensions.y) * .9;
         return `${height.toFixed(2)}px`;
     }
     /** Position of the map outlet container */

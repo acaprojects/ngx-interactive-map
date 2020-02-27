@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 
-import { MAP_OVERLAY_DATA } from '../../map-overlay-outlet/map-overlay-outlet.component';
+import { MAP_OVERLAY_DATA } from '../../../helpers/map.interfaces';
 
 export interface MapPinData {
     /** Text to render above the pin */

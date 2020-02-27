@@ -1,15 +1,8 @@
-import { Component, Input, Injector, InjectionToken, SimpleChanges, OnChanges, Type } from '@angular/core';
+import { Component, Input, Injector, SimpleChanges, OnChanges, Type } from '@angular/core';
 import { MapRenderFeature } from '../../classes/map-render-feature';
 import { HashMap, Point } from '../../helpers/type.helpers';
-import { MapState } from '../../helpers/map.interfaces';
+import { MapState, MAP_STATE, MAP_LOCATION, MAP_OVERLAY_DATA } from '../../helpers/map.interfaces';
 import { BehaviorSubject } from 'rxjs';
-
-/** Emitter for changes to the state of the map */
-export const MAP_STATE = new InjectionToken<BehaviorSubject<MapState>>('MapState');
-/** Location of the overlay component or template on the map */
-export const MAP_LOCATION = new InjectionToken<Point>('MapLocation');
-/** Data to pass to the overlay component or template */
-export const MAP_OVERLAY_DATA = new InjectionToken<any>('MapOverlayData');
 
 @Component({
     selector: 'map-overlay-outlet',

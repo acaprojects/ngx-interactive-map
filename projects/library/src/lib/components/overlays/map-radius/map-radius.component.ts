@@ -1,8 +1,7 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
-import { MAP_OVERLAY_DATA, MAP_STATE } from '../../map-overlay-outlet/map-overlay-outlet.component';
-import { MapState } from '../../../helpers/map.interfaces';
+import { MapState, MAP_OVERLAY_DATA, MAP_STATE } from '../../../helpers/map.interfaces';
 
 export interface MapRadiusData {
     /** Text to render above the pin */

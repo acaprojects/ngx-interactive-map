@@ -70,10 +70,10 @@ export class RenderableMap {
         // Prevent non SVG files from being used
         if (map_data.match(/<\/svg>/g)) {
             // Prevent Adobe generic style names from being used
-            raw_data = map_data.replace(/cls-/g, `${this.id}-`);
-            raw_data = map_data.replace(/\.map/g, `svg .map`);
+            raw_data = map_data.replace(/cls\-/gm, `${this.id}-`);
+            raw_data = raw_data.replace(/\.map/gm, `svg .map`);
             // Remove title tags and content from the map
-            raw_data = map_data.replace(/<title>.*<\/title>/gm, '');
+            raw_data = raw_data.replace(/<title>.*<\/title>/gm, '');
         }
         return raw_data;
     }
