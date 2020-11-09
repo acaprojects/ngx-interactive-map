@@ -1,126 +1,132 @@
+import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy, Output, EventEmitter, Renderer2 } from '@angular/core';
 
-import { Component, Input, OnChanges, Output, EventEmitter, SimpleChanges, Injector } from '@angular/core';
-
-import { IMapListener } from '../../directives/map-styler.directive';
-import { BaseWidgetDirective } from '../../base.directive';
-import { IMapFeature, IMapPoint, IStyleMappings } from '../map.interfaces';
-import { AMapFeature } from '../map-feature/map-feature.class';
+import { Point, HashMap, MapOptions, MapEvent } from '../../helpers/type.helpers';
+import { MapRenderFeature } from '../../classes/map-render-feature';
+import { MapService } from '../../services/map.service';
+import { RenderableMap } from '../../classes/renderable-map';
+import { MapStyles } from '../../classes/map-styles';
+import { log } from '../../settings';
+import { MapFeature, MapTextFeature, MapListener } from '../../helpers/map.interfaces';
 
 @Component({
-    selector: 'a-map',
-    templateUrl: './map.template.html',
-    styles: [`
-        .container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            min-height: 12em;
-            min-width: 12em;
-            overflow: hidden;
-            z-index: 1;
-        }
-        i { display: none }
-    `]
+  selector: 'a-map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss']
 })
-export class AMapComponent extends BaseWidgetDirective implements OnChanges {
-    /** URL to the map SVG file */
+export class MapComponent implements OnInit, OnChanges, OnDestroy {
+    /** URL to the map resource to be displayed */
     @Input() public src: string;
-    /** Mapping of CSS styles to apply to the map */
-    @Input('cssStyles') public style_map: IStyleMappings;
-    /** Zoom level as a percentage */
+    /** Zoom level of the map as a whole number. 1 = 100% zoom */
     @Input() public zoom: number;
-    /** Points of interest to render on the map */
-    @Input() public features: IMapFeature[];
-    /** Point on map to center on */
-    @Input() public focus: IMapFeature;
-    /** Event listeners for elements on the map */
-    @Input() public listeners: IMapListener[];
-    /** Center point of the map */
-    @Input() public center: IMapPoint;
-    /** Disable moving and zooming the map */
-    @Input() public lock: boolean;
-    /** Emitter for changes to the zoom percentage */
-    @Output() public zoomChange = new EventEmitter();
-    /** Emitter for changes to the center position */
-    @Output() public centerChange = new EventEmitter();
-    /** Emitter for listened events */
-    @Output() public event = new EventEmitter();
+    /**
+     * Position of the center point of the component on the map displayed
+     *
+     * For example:
+     *
+     *     { x: 0, y: 0 }
+     * Places the map top left corner in the middle of the component
+     *
+     *     { x: 0.5, y: 0.5 }
+     * Places the center of the map in the middle of the component
+     *
+     *     { x: 1, y: 1 }
+     * Places the bottom right corner of the map in the middle of the component
+     */
+    @Input() public center: Point = { x: .5, y: .5 };
+    /** List of elements to render on top of the map */
+    @Input() public features: MapFeature[] = [];
+    /** List of elements to render on top of the map */
+    @Input() public text: MapTextFeature[] = [];
+    /** List of listeners for elements on the map */
+    @Input() public listeners: MapListener[] = [];
+    /** Mapping of CSS selectors to override styles */
+    @Input() public css: HashMap<HashMap<string>> = {};
+    /** Element or Point to focus the map on */
+    @Input() public focus: string | Point;
+    /** Optional flags for the map */
+    @Input() public options: MapOptions;
+    /** Emitter for changes to the zoom value */
+    @Output() public zoomChange = new EventEmitter<number>();
+    /** Emitter for changes to the center value */
+    @Output() public centerChange = new EventEmitter<Point>();
+    /** Emitter for changes to the zoom value */
+    @Output() public events = new EventEmitter<MapEvent>();
+    /** Details of the currently displayed map */
+    public map: RenderableMap;
+    /**  */
+    public styler: MapStyles;
+    /** List of elements to render on top of the map */
+    public feature_list: MapRenderFeature[] = [];
+    /** List of text to render on top of the map */
+    public text_list: MapRenderFeature[] = [];
 
-    /** SVG Element for the map */
-    public map: SVGElement;
-    /** List of processed map features */
-    public render_features: AMapFeature[] = [];
-    /** String of mapped CSS values */
-    public css: string;
-    /** Processed zoom level value */
-    public scale: number;
+    constructor(private _service: MapService) { }
 
-    constructor(private _injector: Injector) {
-        super();
+    public ngOnInit() {
+
     }
 
     public ngOnChanges(changes: SimpleChanges) {
-        super.ngOnChanges(changes);
+        if (changes.src && this.src) {
+            this._service.loadMap(this.src).then((map) => {
+                this.map = map;
+                this.updateStyles();
+                this.feature_list = this.processFeatures(this.features || []);
+                this.text_list = this.processFeatures(this.text || []);
+            });
+        }
+        if (changes.css) {
+            this.updateStyles();
+        }
+        if (changes.focus && this.focus) {
+            this.onFocusChange(this.focus);
+        }
         if (changes.features) {
-            this.updateFeatures();
+            this.feature_list = this.processFeatures(this.features || []);
         }
-        if (changes.zoom) {
-            this.scale = this.zoom;
+        if (changes.text) {
+            this.text_list = this.processFeatures(this.text || []);
         }
     }
 
-    /**
-     * Update the center position of the map and emit the change
-     * @param center New center position
-     */
-    public postCenter(center: IMapPoint): void {
-        this.center = center;
-        this.centerChange.emit(center);
+    public ngOnDestroy(): void {
+        if (this.styler) {
+            this.styler.destroy();
+            this.styler = null;
+        }
+    }
+
+    public updateStyles() {
+        if (this.styler) {
+            this.styler.destroy();
+        }
+        this.styler = new MapStyles(this.css || {}, this.map);
     }
 
     /**
-     * Update the zoom level of the map and emit the change
-     * @param zoom New zoom level
+     * Update focused point or element
+     * @param location ID of the element to focus or a point within the map
      */
-    public postZoom(zoom: number): void {
-        this.zoom = zoom;
-        this.zoomChange.emit(zoom);
-    }
-
-    public handleEvent(e) {
-
-    }
-
-    public updateMap(el: SVGElement) {
-        this.timeout('map', () => this.map = el, 10);
-    }
-
-    /**
-     * Reset the position and scale to their intial values
-     */
-    public reset() {
-        this.postZoom(1);
-        this.scale = 1;
-        this.postCenter({ x: .5, y: .5 });
-    }
-
-    /**
-     * Update the list of features keeping already existing feature
-     */
-    private updateFeatures() {
-        const features = this.features;
-        this.render_features = (features || []).reduce((a, v) => {
-            const feature = this.render_features.find(
-                i => i.id === v.id && i.content === v.content
-            );
-            if (feature) {
-                feature.data = v.data;
-                a.push(feature);
+    public onFocusChange(location: string | Point) {
+        if (!this.map) { return; }
+        if (typeof location === 'string') {
+            const element = this.map.element_map[location];
+            if (!element) {
+                log('MAP', `No element for id "${location}"`, undefined, 'warn');
+                return;
             } else {
-                a.push(new AMapFeature(this, this._injector, v));
+                this.center = element.coordinates;
             }
-            return a;
-        }, []);
+        } else {
+            this.center = {
+                x: Math.max(0, Math.min(1, location.x || this.center.x)),
+                y: Math.max(0, Math.min(1, location.y || this.center.y))
+            };
+        }
     }
 
+    public processFeatures(list: MapFeature[]): MapRenderFeature[] {
+        if (!this.map) { return []; }
+        return list.map(i => new MapRenderFeature(i, this.map));
+    }
 }

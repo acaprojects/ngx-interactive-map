@@ -1,51 +1,40 @@
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
 
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
+import { MapComponent } from './map.component';
 import { MapService } from '../../services/map.service';
-import { AMapComponent } from './map.component';
-import { MapOverlayOutletComponent } from '../map-overlay-outlet/map-overlay-outlet.component';
-import { MapRendererComponent } from '../map-renderer/map-renderer.component';
-import { MapInputDirective } from '../../directives/map-input.directive';
-import { MapStylerDirective } from '../../directives/map-styler.directive';
-import { APipesModule } from '@acaprojects/ngx-pipes';
-import { HttpClientModule } from '@angular/common/http';
+import { RenderableMap } from '../../classes/renderable-map';
 
-describe('AMapComponent', () => {
-    let fixture: ComponentFixture<AMapComponent>;
-    let component: AMapComponent;
-    let service: MapService
-    let clock: jasmine.Clock;
+@Component({
+    selector: 'a-map-outlet',
+    template: '',
+    inputs: ['zoom', 'center', 'listeners', 'features', 'text', 'map']
+})
+class MockMapOutlet {}
+
+describe('MapComponent', () => {
+    let component: MapComponent;
+    let fixture: ComponentFixture<MapComponent>;
+    let service: any;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [MapComponent, MockMapOutlet],
+            providers: [
+                { provide: MapService, useValue: jasmine.createSpyObj('MapService', ['loadMap']) }
+            ]
+        }).compileComponents();
+    }));
 
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                AMapComponent,
-                MapOverlayOutletComponent,
-                MapRendererComponent,
-                MapInputDirective,
-                MapStylerDirective
-            ],
-            providers: [
-                MapService
-            ],
-            imports: [CommonModule, HttpClientModule, APipesModule, NoopAnimationsModule]
-        }).compileComponents();
-        fixture = TestBed.createComponent(AMapComponent);
-        component = fixture.debugElement.componentInstance;
         service = TestBed.get(MapService);
-        clock = jasmine.clock();
-        clock.uninstall();
-        clock.install();
+        service.loadMap.and.returnValue(Promise.resolve(new RenderableMap('test.svg', '<svg></svg>')));
+        fixture = TestBed.createComponent(MapComponent);
+        component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    afterEach(() => {
-        clock.uninstall();
-    });
-
-    it('should create an instance', () => {
+    it('should create', () => {
         expect(component).toBeTruthy();
     });
 });

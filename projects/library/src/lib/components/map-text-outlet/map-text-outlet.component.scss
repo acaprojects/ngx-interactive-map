@@ -1,0 +1,19 @@
+
+.map-text {
+    position: absolute;
+    font-size: 1rem;
+}
+
+.text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: .8em;
+    text-shadow: 0 0 2px #000;
+    white-space: pre-line;
+    min-width: 20em;
+    text-align: center;
+    pointer-events: none;
+}

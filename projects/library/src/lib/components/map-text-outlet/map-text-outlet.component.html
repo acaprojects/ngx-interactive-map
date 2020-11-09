@@ -1,0 +1,18 @@
+<ng-container *ngIf="items && items.length">
+    <ng-container *ngFor="let item of items">
+        <div
+            *ngIf="item.coordinates && (!item.show_after_zoom || zoom >= item.show_after_zoom)"
+            class="map-text"
+            [style.top]="item.coordinates.y * 100 + '%'"
+            [style.left]="item.coordinates.x * 100 + '%'"
+            [style.transform]="'rotate(' + rotation + 'deg)'"
+        >
+            <div
+                class="text"
+                [ngStyle]="item.data"
+            >
+                {{ item.content }}
+            </div>
+        </div>
+    </ng-container>
+</ng-container>

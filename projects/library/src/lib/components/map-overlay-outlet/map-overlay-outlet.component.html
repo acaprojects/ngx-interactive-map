@@ -1,20 +1,20 @@
-<div class="map-overlay-outlet" widget *ngIf="items">
-    <div [class]="'map-poi' + (item.type ? ' ' + item.type : '')" widget *ngFor="let item of items; trackBy: trackByFn">
+<ng-container *ngIf="items && items.length">
+    <ng-container *ngFor="let item of items; trackBy:trackByFn">
         <div
-            class="item"
-            *ngIf="item.position && (item.position.x || item.position.y)"
-            [style.top]="item.position.y + '%'"
-            [style.left]="item.position.x + '%'"
+            *ngIf="item.coordinates"
+            class="map-overlay"
+            [style.top]="(item.coordinates.y * 100) + '%'"
+            [style.left]="(item.coordinates.x * 100) + '%'"
+            [style.transform]="'rotate(' + rotation + 'deg)'"
+            [ngSwitch]="item.content_type"
         >
-            <ng-container [ngSwitch]="item.method">
-                <div *ngSwitchCase="'text'" [innerHTML]="item.content"></div>
-                <ng-container *ngSwitchCase="'template'">
-                    <ng-container *ngTemplateOutlet="item.content; context: item.context"></ng-container>
-                </ng-container>
-                <ng-container *ngSwitchCase="'component'">
-                    <ng-container *ngComponentOutlet="item.content; injector: item.injector"></ng-container>
-                </ng-container>
+            <ng-container *ngSwitchCase="'component'">
+                <ng-container *ngComponentOutlet="item.content; injector: (injectors || {})[item.id]"></ng-container>
             </ng-container>
+            <ng-container *ngSwitchCase="'template'">
+                <ng-container *ngTemplateOutlet="item.content"></ng-container>
+            </ng-container>
+            <div *ngSwitchDefault [innerHTML]="item.content"></div>
         </div>
-    </div>
-</div>
+    </ng-container>
+</ng-container>
