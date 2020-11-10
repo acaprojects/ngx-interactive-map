@@ -29,6 +29,8 @@ export class MapCenterDirective implements OnDestroy {
     @Input() public center: Point;
     /** Element containing the map */
     @Input() public element: ElementRef<HTMLDivElement>;
+    /** Lock Map */
+    @Input() public lock: boolean;
     /** Emitter for changes to the center value */
     @Output() public centerChange = new EventEmitter<Point>();
     /** Bound box of the host element */
@@ -44,11 +46,13 @@ export class MapCenterDirective implements OnDestroy {
 
     @HostListener('mousedown', ['$event'])
     public startMoveMouse(event: MouseEvent) {
+        if (this.lock) { return; }
         this.startMove(event);
     }
 
     @HostListener('touchstart', ['$event'])
     public startMoveTouch(event: any) {
+        if (this.lock) { return; }
         this.startMove(event);
     }
 
@@ -103,6 +107,9 @@ export class MapCenterDirective implements OnDestroy {
      */
     private move(event: MouseEvent | TouchEvent) {
         if (!this._box) { return; }
+        if (this.lock) {
+            return;
+        }
         const position = eventToPoint(event);
         if (!insideRect(position, this._parent_box)) { return; }
         event.preventDefault();
