@@ -45,6 +45,8 @@ export class MapComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public focus: string | Point;
     /** Optional flags for the map */
     @Input() public options: MapOptions;
+    /** Whether Map cannot be moved */
+    @Input() public lock: boolean;
     /** Emitter for changes to the zoom value */
     @Output() public zoomChange = new EventEmitter<number>();
     /** Emitter for changes to the center value */

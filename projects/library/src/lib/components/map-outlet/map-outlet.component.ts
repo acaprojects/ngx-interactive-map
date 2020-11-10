@@ -50,6 +50,8 @@ export class MapOutletComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public listeners: MapListener[] = [];
     /** List of text to render over the map */
     @Input() public text: MapRenderFeature[] = [];
+    /** Whether Map cannot be moved */
+    @Input() public lock: boolean;
     /** Emitter for changes to the zoom value */
     @Output() public zoomChange = new EventEmitter<number>();
     /** Emitter for changes to the center value */
